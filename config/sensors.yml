@@ -1,0 +1,5 @@
+sensors:
+    DHT22:
+        class: sensor.sensors.DHT22
+        gpio:
+            pin: 7

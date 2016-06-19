@@ -1,0 +1,7 @@
+scenes:
+    scene.main:
+        class: scene.scenes.MainScene
+        template: /view/hello.fxml
+        options:
+            - main
+        config:

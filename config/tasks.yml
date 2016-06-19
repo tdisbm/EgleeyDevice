@@ -1,0 +1,9 @@
+tasks:
+    DHT22:
+        class: tasks.DHT22Task
+        rate: 5000
+
+    symbiosis:
+        class: tasks.SymbiosisTask
+        rate: 5000
+
