@@ -10,7 +10,7 @@ public class Main extends Application {
 
         Kernel kernel = new Kernel();
 
-        kernel.ini();
+        kernel.up();
         //launch(args);
     }
 
@@ -20,16 +20,6 @@ public class Main extends Application {
 
         Kernel kernel = new Kernel();
 
-        kernel.ini();
-//        SceneResolver sceneResolver = new SceneResolver();
-//
-//        sceneResolver
-//            .addResource(new File("config/scenes.yml"))
-//            .addResource(new File("config/scenes2.yml"));
-//
-//        sceneResolver.resolve();
-//        sceneResolver.getMainScene();
-//
-//        switcher.load("/view/hello.fxml").show();
+        kernel.up();
     }
 }

@@ -11,7 +11,7 @@ public interface ContainerInterface
      * @param resource String
      * @return String
      */
-    LinkedHashMap get(String resource);
+    Object get(String resource);
 
     /**
      * compile elements of the container

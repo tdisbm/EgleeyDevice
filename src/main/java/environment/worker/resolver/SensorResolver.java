@@ -27,6 +27,8 @@ public class SensorResolver extends AbstractResolver
         return obj;
     }
 
+    public void done(LinkedHashMap instances) {}
+
     public String getPrefix()
     {
         return "@";

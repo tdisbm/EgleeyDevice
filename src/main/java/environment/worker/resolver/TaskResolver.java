@@ -2,8 +2,10 @@ package environment.worker.resolver;
 
 import environment.unit.resolver.AbstractResolver;
 import environment.unit.task.AbstractTask;
+import environment.worker.thread.TaskResolverThread;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -14,7 +16,6 @@ public class TaskResolver extends AbstractResolver
     {
         LinkedHashMap config = (LinkedHashMap) entry.getValue();
         String className = (String) config.get("class");
-        Integer rate = (Integer) config.get("rate");
 
         Constructor<?> cons = Class
             .forName(className)
@@ -23,10 +24,23 @@ public class TaskResolver extends AbstractResolver
         AbstractTask task = (AbstractTask) cons.newInstance();
         task.setContainer(this.getContainer());
 
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(task, 0, rate, TimeUnit.MILLISECONDS);
+        Field rate = task
+            .getClass()
+            .getSuperclass()
+            .getDeclaredField("rate");
 
-        return executor;
+        rate.setAccessible(true);
+        rate.set(task, config.get("rate"));
+        rate.setAccessible(false);
+
+        return task;
+    }
+
+    public void done(LinkedHashMap instances)
+    {
+        TaskResolverThread resolverThread = new TaskResolverThread(this.getContainer());
+        Thread master = new Thread(resolverThread);
+        master.start();
     }
 
     public String getPrefix() {

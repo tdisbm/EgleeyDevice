@@ -7,20 +7,22 @@ public abstract class AbstractTask implements Runnable
 {
     private ContainerInterface container;
 
-    public Object get(String key)
+    private int rate;
+
+    final public Object get(String key)
     {
         return this.container.get(key);
     }
 
-    public AbstractTask setContainer(ContainerInterface container)
+    final public AbstractTask setContainer(ContainerInterface container)
     {
         this.container = container;
 
         return this;
     }
 
-    public ContainerInterface getContainer()
+    final public int getRate()
     {
-        return this.container;
+        return this.rate;
     }
 }

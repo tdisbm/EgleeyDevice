@@ -1,36 +1,22 @@
 package environment.unit.resolver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import environment.unit.container.ContainerInterface;
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 
 public abstract class AbstractResolver implements ResolverInterface
 {
-    private ObjectMapper mapper;
-
     private ContainerInterface container;
 
     private boolean __resolved__;
-
-    private LinkedList<File> resources;
-
-    public AbstractResolver()
-    {
-        this.resources = new LinkedList<File>();
-        this.mapper = new ObjectMapper(new YAMLFactory());
-    }
 
     /**
      * @param container ContainerInterface
      * @return ResolverInterface
      */
-    public ResolverInterface setContainer(ContainerInterface container)
+    final public ResolverInterface setContainer(ContainerInterface container)
     {
         this.container = container;
 
@@ -40,42 +26,16 @@ public abstract class AbstractResolver implements ResolverInterface
     /**
      * @return ContainerInterface
      */
-    public ContainerInterface getContainer()
+    final public ContainerInterface getContainer()
     {
         return this.container;
-    }
-
-    /**
-     * @param f File
-     * @return ResolverInterface
-     */
-    public ResolverInterface addResource(File f)
-    {
-        if (!f.exists()) {
-            return this;
-        }
-
-        this.resources.add(f);
-
-        return this;
-    }
-
-    /**
-     * @param resources LinkedList
-     * @return this
-     */
-    public ResolverInterface setResources(LinkedList<File> resources)
-    {
-        this.resources = resources;
-
-        return this;
     }
 
     /**
      *
      * @throws Exception
      */
-    public void resolve() throws Exception
+    final public void resolve() throws Exception
     {
         if (this.__resolved__) {
             throw new Exception("Resolver '" + this.getClass() + "' was already resolved");
@@ -85,13 +45,12 @@ public abstract class AbstractResolver implements ResolverInterface
             throw new Exception("Container is not provided to resolver");
         }
 
-        for (File f : this.resources) {
-            this.container.merge(
-                this.mapper.readValue(f, this.container.getClass())
-            );
+        LinkedHashMap elements = this.getElements();
+
+        if (null == elements) {
+            return;
         }
 
-        LinkedHashMap elements = this.getElements();
         LinkedHashMap mappedEntries = new LinkedHashMap();
         Map.Entry entry;
 
@@ -105,6 +64,7 @@ public abstract class AbstractResolver implements ResolverInterface
         }
 
         this.setElements(mappedEntries);
+        this.done(this.getElements());
 
         this.__resolved__ = true;
     }

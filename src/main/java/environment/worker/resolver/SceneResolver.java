@@ -25,6 +25,8 @@ public class SceneResolver extends AbstractResolver
         return obj;
     }
 
+    public void done(LinkedHashMap instances) {}
+
     /**
      * prefix to identify resolved options
      *

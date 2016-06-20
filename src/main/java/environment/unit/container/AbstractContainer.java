@@ -1,5 +1,7 @@
 package environment.unit.container;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,19 +15,31 @@ public abstract class AbstractContainer implements ContainerInterface
 
     private boolean compiled = false;
 
-    public Object get(String resource)
+    @Nullable
+    final public Object get(String resource)
     {
         if (!this.compiled) {
             return null;
         }
 
-        return this.elements.get(resource);
+        Object result = this.elements.get(resource);
+
+        try {
+            if (null == result) {
+                Field field = this.getClass().getDeclaredField(resource);
+                field.setAccessible(true);
+                result = field.get(this);
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
-    /**
-     * @param container LinkedHashMap
-     */
-    public void merge(ContainerInterface container) throws
+    final public void merge(ContainerInterface container) throws
         IntrospectionException,
         InvocationTargetException,
         IllegalAccessException
@@ -59,7 +73,7 @@ public abstract class AbstractContainer implements ContainerInterface
         }
     }
 
-    public void compile() throws IllegalAccessException
+    final public void compile() throws IllegalAccessException
     {
         if (this.compiled) {
             return;
@@ -83,10 +97,12 @@ public abstract class AbstractContainer implements ContainerInterface
             }
         }
 
+        System.out.println("Container '" + this.getClass().getName() + "' is compiled");
+
         this.compiled = true;
     }
 
-    public boolean isCompiled()
+    final public boolean isCompiled()
     {
         return this.compiled;
     }

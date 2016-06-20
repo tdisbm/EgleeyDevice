@@ -52,8 +52,7 @@ public class AppRegister
     public AppRegister registerResolver(ResolverInterface resolver)
     {
         resolver
-            .setContainer(this.container)
-            .setResources(this.resources);
+            .setContainer(this.container);
 
         this.resolvers.add(resolver);
 
@@ -63,6 +62,11 @@ public class AppRegister
     public LinkedList<ResolverInterface> getResolvers()
     {
         return this.resolvers;
+    }
+
+    public LinkedList<File> getResources()
+    {
+        return this.resources;
     }
 
     public ContainerInterface getContainer()
