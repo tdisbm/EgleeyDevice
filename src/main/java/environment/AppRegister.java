@@ -2,6 +2,7 @@ package environment;
 
 import environment.unit.container.ContainerInterface;
 import environment.unit.resolver.ResolverInterface;
+import environment.worker.resolver.ParameterResolver;
 import environment.worker.resolver.SceneResolver;
 import environment.worker.resolver.SensorResolver;
 import environment.worker.resolver.TaskResolver;
@@ -36,6 +37,7 @@ public class AppRegister
         .registerResource(new File("config/parameters.yml"))
 
         .registerResolver(new SceneResolver())
+        .registerResolver(new ParameterResolver())
         .registerResolver(new TaskResolver())
         .registerResolver(new SensorResolver());
     }
@@ -51,8 +53,7 @@ public class AppRegister
 
     public AppRegister registerResolver(ResolverInterface resolver)
     {
-        resolver
-            .setContainer(this.container);
+        resolver.setContainer(this.container);
 
         this.resolvers.add(resolver);
 

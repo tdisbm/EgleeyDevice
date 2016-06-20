@@ -8,11 +8,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.*;
 
 public class TaskResolver extends AbstractResolver
 {
-    public Object map(Map.Entry entry) throws Exception
+    public Object resolve(Map.Entry entry) throws Exception
     {
         LinkedHashMap config = (LinkedHashMap) entry.getValue();
         String className = (String) config.get("class");
@@ -43,11 +42,18 @@ public class TaskResolver extends AbstractResolver
         master.start();
     }
 
-    public String getPrefix() {
+    public String getPrefix()
+    {
         return "#";
     }
 
-    public String getProperty() {
+    public String getPostfix()
+    {
+        return "";
+    }
+
+    public String getProperty()
+    {
         return "tasks";
     }
 }

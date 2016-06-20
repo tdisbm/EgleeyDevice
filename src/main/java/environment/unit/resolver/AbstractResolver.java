@@ -10,7 +10,11 @@ public abstract class AbstractResolver implements ResolverInterface
 {
     private ContainerInterface container;
 
-    private boolean __resolved__;
+    private boolean __resolved__ = false;
+
+    private boolean __prefixed__ = false;
+
+    private boolean __mapped__ = false;
 
     /**
      * @param container ContainerInterface
@@ -32,7 +36,6 @@ public abstract class AbstractResolver implements ResolverInterface
     }
 
     /**
-     *
      * @throws Exception
      */
     final public void resolve() throws Exception
@@ -45,30 +48,20 @@ public abstract class AbstractResolver implements ResolverInterface
             throw new Exception("Container is not provided to resolver");
         }
 
-        LinkedHashMap elements = this.getElements();
-
-        if (null == elements) {
-            return;
-        }
-
-        LinkedHashMap mappedEntries = new LinkedHashMap();
-        Map.Entry entry;
-
-        for (Object o : elements.entrySet()) {
-            entry = (Map.Entry) o;
-
-            mappedEntries.put(
-                this.getPrefix() + entry.getKey(),
-                this.map(entry)
-            );
-        }
-
-        this.setElements(mappedEntries);
+        this.prefixing();
+        this.mapping();
         this.done(this.getElements());
 
         this.__resolved__ = true;
     }
 
+    /**
+     * get current property elements
+     *
+     * @return LinkedHashMap
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
     private LinkedHashMap getElements() throws
         IllegalAccessException,
         NoSuchFieldException
@@ -84,6 +77,14 @@ public abstract class AbstractResolver implements ResolverInterface
         return (LinkedHashMap) field.get(this.container);
     }
 
+    /**
+     * set current property elements
+     *
+     * @param elements LinkedHashMap
+     * @return this
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
     private ResolverInterface setElements(LinkedHashMap elements) throws
         IllegalAccessException,
         NoSuchFieldException
@@ -98,5 +99,65 @@ public abstract class AbstractResolver implements ResolverInterface
         field.set(this.container, elements);
 
         return this;
+    }
+
+    private void prefixing() throws Exception
+    {
+        if (this.__prefixed__) {
+            return;
+        }
+
+        String prefix = this.getPrefix();
+        String postfix = this.getPostfix();
+
+        if (prefix.isEmpty()) {
+            throw new Exception("Resolver's prefix must not be empty");
+        }
+
+        Map.Entry entry;
+        LinkedHashMap elements = this.getElements();
+        LinkedHashMap prefixed = new LinkedHashMap();
+
+        for (Object o : elements.entrySet()) {
+            entry = (Map.Entry) o;
+
+            prefixed.put(
+                prefix + entry.getKey() + postfix,
+                entry.getValue()
+            );
+        }
+
+        this.setElements(prefixed);
+        this.__prefixed__ = true;
+    }
+
+    private void mapping() throws Exception {
+        if (this.__mapped__) {
+            return;
+        }
+
+        if (!this.__prefixed__) {
+            return;
+        }
+
+        LinkedHashMap mapped = new LinkedHashMap();
+        LinkedHashMap elements = this.getElements();
+        Map.Entry entry;
+
+        if (null == elements) {
+            return;
+        }
+
+        for (Object o : elements.entrySet()) {
+            entry = (Map.Entry) o;
+
+            mapped.put(
+                entry.getKey(),
+                this.resolve(entry)
+            );
+        }
+
+        this.setElements(mapped);
+        this.__mapped__ = true;
     }
 }

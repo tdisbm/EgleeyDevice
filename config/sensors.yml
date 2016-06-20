@@ -3,3 +3,8 @@ sensors:
         class: sensor.sensors.DHT22
         gpio:
             pin: 7
+
+    test:
+        class: test1
+        gpio:
+            pin: 10

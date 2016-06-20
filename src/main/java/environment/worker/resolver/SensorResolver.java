@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class SensorResolver extends AbstractResolver
 {
-    public Object map(Map.Entry entry) throws Exception
+    public Object resolve(Map.Entry entry) throws Exception
     {
         LinkedHashMap current = (LinkedHashMap) entry.getValue();
         LinkedHashMap gpio = (LinkedHashMap) current.get("gpio");
@@ -32,6 +32,11 @@ public class SensorResolver extends AbstractResolver
     public String getPrefix()
     {
         return "@";
+    }
+
+    public String getPostfix()
+    {
+        return "";
     }
 
     public String getProperty()

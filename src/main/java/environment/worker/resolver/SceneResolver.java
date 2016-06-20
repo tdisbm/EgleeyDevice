@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class SceneResolver extends AbstractResolver
 {
-    public Object map(Map.Entry entry) throws Exception
+    public Object resolve(Map.Entry entry) throws Exception
     {
         LinkedHashMap current = (LinkedHashMap) entry.getValue();
         Constructor<?> cons = Class
@@ -35,6 +35,16 @@ public class SceneResolver extends AbstractResolver
     public String getPrefix()
     {
         return "@";
+    }
+
+    /**
+     * Postfix to identify resolved options
+     *
+     * @return String
+     */
+    public String getPostfix()
+    {
+        return "";
     }
 
     /**

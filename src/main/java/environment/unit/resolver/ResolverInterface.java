@@ -17,6 +17,13 @@ public interface ResolverInterface
     String getPrefix();
 
     /**
+     * postfix to identify resolved options
+     *
+     * @return String
+     */
+    String getPostfix();
+
+    /**
      * property to resolve
      *
      * @return String
@@ -36,7 +43,7 @@ public interface ResolverInterface
     /**
      * @param entry LinkedHashMap
      */
-    Object map(Map.Entry entry) throws Exception;
+    Object resolve(Map.Entry entry) throws Exception;
 
     /**
      * callback after resolve apply

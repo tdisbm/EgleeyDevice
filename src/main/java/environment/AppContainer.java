@@ -14,7 +14,7 @@ public class AppContainer extends AbstractContainer
 
     private LinkedHashMap sensors;
 
-    private LinkedHashMap $parameters;
+    private LinkedHashMap parameters;
 
     public AppContainer setScenes(LinkedHashMap scenes)
     {
@@ -40,15 +40,15 @@ public class AppContainer extends AbstractContainer
         return sensors;
     }
 
-    public ContainerInterface setParameters(LinkedHashMap $parameters) {
-        this.$parameters = $parameters;
+    public ContainerInterface setParameters(LinkedHashMap parameters) {
+        this.parameters = parameters;
 
         return this;
     }
 
     public LinkedHashMap getParameters()
     {
-        return $parameters;
+        return parameters;
     }
 
     public AppContainer setTasks(LinkedHashMap tasks) {
