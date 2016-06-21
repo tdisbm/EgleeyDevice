@@ -1,10 +1,9 @@
 package environment.unit.resolver;
 
 import environment.unit.container.ContainerInterface;
+import environment.unit.tree_builder.TreeBuilder;
 
-import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public interface ResolverInterface
@@ -24,21 +23,17 @@ public interface ResolverInterface
     String getPostfix();
 
     /**
-     * property to resolve
-     *
-     * @return String
-     */
-    String getProperty();
-
-    /**
      * @return ResolverInterface
      */
     ResolverInterface setContainer(ContainerInterface container);
 
     /**
-     * @return ContainerInterface
+     * build config tree;
+     *
+     * @param treeBuilder TreeBuilder
+     * @return TreeBuilder
      */
-    ContainerInterface getContainer();
+    TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception;
 
     /**
      * @param entry LinkedHashMap

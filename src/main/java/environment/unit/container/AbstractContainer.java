@@ -1,11 +1,14 @@
 package environment.unit.container;
 
+import environment.unit.dependency_injection.DependencyBuilder;
+import environment.unit.resolver.ResolverInterface;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 
@@ -13,12 +16,16 @@ public abstract class AbstractContainer implements ContainerInterface
 {
     private LinkedHashMap elements = new LinkedHashMap();
 
-    private boolean compiled = false;
+    private LinkedList<ResolverInterface> resolvers = new LinkedList<ResolverInterface>();
+
+    private DependencyBuilder dependencyBuilder = new DependencyBuilder();
+
+    private boolean __compiled = false;
 
     @Nullable
     final public Object get(String resource)
     {
-        if (!this.compiled) {
+        if (!this.__compiled) {
             return null;
         }
 
@@ -37,6 +44,15 @@ public abstract class AbstractContainer implements ContainerInterface
         }
 
         return result;
+    }
+
+    final public ContainerInterface addResolver(ResolverInterface resolver)
+    {
+        resolver.setContainer(this);
+
+        this.resolvers.add(resolver);
+
+        return this;
     }
 
     final public void merge(ContainerInterface container) throws
@@ -75,7 +91,7 @@ public abstract class AbstractContainer implements ContainerInterface
 
     final public void compile() throws IllegalAccessException
     {
-        if (this.compiled) {
+        if (this.__compiled) {
             return;
         }
 
@@ -97,13 +113,16 @@ public abstract class AbstractContainer implements ContainerInterface
             }
         }
 
+        this.__compiled = true;
+
         System.out.println("Container '" + this.getClass().getName() + "' is compiled");
 
-        this.compiled = true;
+        this.dependencyBuilder.setResolvers(this.resolvers);
+        this.dependencyBuilder.buildDependencyTree(this);
     }
 
     final public boolean isCompiled()
     {
-        return this.compiled;
+        return this.__compiled;
     }
 }

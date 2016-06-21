@@ -20,7 +20,7 @@ public class Kernel
     final public void up()
     {
         this.loadResources();
-        this.runResolvers();
+        this.loadContainer();
     }
 
     private Kernel loadResources()
@@ -46,23 +46,29 @@ public class Kernel
         return this;
     }
 
-    private Kernel runResolvers()
+    private Kernel loadContainer()
     {
-        LinkedList<ResolverInterface> resolvers = this.register.getResolvers();
-
-        for (ResolverInterface o : resolvers) {
-            try {
-                o.resolve();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         try {
             this.register.getContainer().compile();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
+//        LinkedList<ResolverInterface> resolvers = this.register.getResolvers();
+//
+//        for (ResolverInterface o : resolvers) {
+//            try {
+//                o.resolve();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        try {
+//            this.register.getContainer().compile();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
 
         return this;
     }

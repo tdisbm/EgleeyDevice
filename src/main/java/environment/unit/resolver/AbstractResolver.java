@@ -1,6 +1,8 @@
 package environment.unit.resolver;
 
 import environment.unit.container.ContainerInterface;
+import environment.unit.tree_builder.TreeBuilder;
+
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,12 +12,31 @@ public abstract class AbstractResolver implements ResolverInterface
 {
     private ContainerInterface container;
 
+    private TreeBuilder treeBuilder = new TreeBuilder();
+
     private boolean __resolved__ = false;
 
     private boolean __prefixed__ = false;
 
     private boolean __mapped__ = false;
 
+    public AbstractResolver()
+    {
+        try {
+            this.treeBuilder = this.buildConfigTree(this.treeBuilder);
+
+            if (null == this.treeBuilder) {
+                throw new Exception("Resolver '" + this.getClass() + "' is not configured");
+            }
+
+            if (this.treeBuilder.getRootName().equals("")) {
+                throw new Exception("Resolver '" + this.getClass() + "' has empty root");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * @param container ContainerInterface
      * @return ResolverInterface
@@ -27,13 +48,6 @@ public abstract class AbstractResolver implements ResolverInterface
         return this;
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    final public ContainerInterface getContainer()
-    {
-        return this.container;
-    }
 
     /**
      * @throws Exception
@@ -69,7 +83,7 @@ public abstract class AbstractResolver implements ResolverInterface
         Field field = this.container
             .getClass()
             .getDeclaredField(
-                this.getProperty()
+                this.treeBuilder.getRootName()
             );
 
         field.setAccessible(true);
@@ -92,7 +106,7 @@ public abstract class AbstractResolver implements ResolverInterface
         Field field = this.container
             .getClass()
             .getDeclaredField(
-                this.getProperty()
+                this.treeBuilder.getRootName()
             );
 
         field.setAccessible(true);

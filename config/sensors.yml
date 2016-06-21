@@ -4,7 +4,3 @@ sensors:
         gpio:
             pin: 7
 
-    test:
-        class: test1
-        gpio:
-            pin: 10

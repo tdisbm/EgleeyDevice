@@ -1,9 +1,10 @@
 package environment.unit.container;
 
 
+import environment.unit.resolver.ResolverInterface;
+
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
 
 public interface ContainerInterface
 {
@@ -27,4 +28,12 @@ public interface ContainerInterface
      * @param container ContainerInterface
      */
     void merge(ContainerInterface container) throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+
+    /**
+     * add resolver to container
+     *
+     * @param resolver ResolverInterface
+     * @return ContainerInterface;
+     */
+    ContainerInterface addResolver(ResolverInterface resolver);
 }

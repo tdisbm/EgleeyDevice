@@ -42,7 +42,7 @@ public class AppRegister
         .registerResolver(new SensorResolver());
     }
 
-    public AppRegister registerResource(File resource)
+    final public AppRegister registerResource(File resource)
     {
         if (resource.exists()) {
             this.resources.add(resource);
@@ -51,10 +51,10 @@ public class AppRegister
         return this;
     }
 
-    public AppRegister registerResolver(ResolverInterface resolver)
+    final public AppRegister registerResolver(ResolverInterface resolver)
     {
         resolver.setContainer(this.container);
-
+        this.container.addResolver(resolver);
         this.resolvers.add(resolver);
 
         return this;

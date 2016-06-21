@@ -2,6 +2,9 @@ package environment.worker.resolver;
 
 import environment.unit.resolver.AbstractResolver;
 import environment.unit.task.AbstractTask;
+import environment.unit.tree_builder.TreeBuilder;
+import environment.unit.tree_builder.nodes.ArrayNode;
+import environment.unit.tree_builder.nodes.StringNode;
 import environment.worker.thread.TaskResolverThread;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +24,7 @@ public class TaskResolver extends AbstractResolver
             .getConstructor();
 
         AbstractTask task = (AbstractTask) cons.newInstance();
-        task.setContainer(this.getContainer());
+        //task.setContainer(this.getContainer());
 
         Field rate = task
             .getClass()
@@ -37,9 +40,9 @@ public class TaskResolver extends AbstractResolver
 
     public void done(LinkedHashMap instances)
     {
-        TaskResolverThread resolverThread = new TaskResolverThread(this.getContainer());
-        Thread master = new Thread(resolverThread);
-        master.start();
+        //TaskResolverThread resolverThread = new TaskResolverThread(this.getContainer());
+        //Thread master = new Thread(resolverThread);
+        //master.start();
     }
 
     public String getPrefix()
@@ -50,6 +53,16 @@ public class TaskResolver extends AbstractResolver
     public String getPostfix()
     {
         return "";
+    }
+
+    public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
+    {
+        return treeBuilder.setRoot("tasks")
+            .next(new ArrayNode(null))
+                .addChild(new StringNode("class"))
+                .addChild(new StringNode("rate"))
+            .end()
+        .end();
     }
 
     public String getProperty()
