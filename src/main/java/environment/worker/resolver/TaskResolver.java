@@ -4,6 +4,7 @@ import environment.unit.resolver.AbstractResolver;
 import environment.unit.task.AbstractTask;
 import environment.unit.tree_builder.TreeBuilder;
 import environment.unit.tree_builder.nodes.ArrayNode;
+import environment.unit.tree_builder.nodes.InstanceNode;
 import environment.unit.tree_builder.nodes.StringNode;
 import environment.worker.thread.TaskResolverThread;
 
@@ -58,15 +59,8 @@ public class TaskResolver extends AbstractResolver
     public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
     {
         return treeBuilder.setRoot("tasks")
-            .next(new ArrayNode(null))
-                .addChild(new StringNode("class"))
-                .addChild(new StringNode("rate"))
-            .end()
+            .addChild(new InstanceNode("class"))
+            .addChild(new StringNode("rate"))
         .end();
-    }
-
-    public String getProperty()
-    {
-        return "tasks";
     }
 }

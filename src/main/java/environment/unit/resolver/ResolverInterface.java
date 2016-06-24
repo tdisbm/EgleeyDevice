@@ -49,4 +49,8 @@ public interface ResolverInterface
      * @throws Exception
      */
     void resolve() throws Exception;
+
+    void mapping() throws Exception;
+
+    void prefixing() throws Exception;
 }

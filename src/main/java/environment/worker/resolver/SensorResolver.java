@@ -2,8 +2,7 @@ package environment.worker.resolver;
 
 import environment.unit.resolver.AbstractResolver;
 import environment.unit.tree_builder.TreeBuilder;
-import environment.unit.tree_builder.nodes.ArrayNode;
-import environment.unit.tree_builder.nodes.StringNode;
+import environment.unit.tree_builder.nodes.*;
 import sensor.SensorInterface;
 
 import java.lang.reflect.Constructor;
@@ -44,12 +43,11 @@ public class SensorResolver extends AbstractResolver
 
     public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
     {
-        return treeBuilder.setRoot("sensor")
-            .next(new ArrayNode(null))
-                .addChild(new StringNode("class"))
-                .next(new ArrayNode("gpio"))
-                    .addChild(new StringNode("pin"))
-                .end()
+        return treeBuilder.setRoot("sensors")
+            .addChild(new InstanceNode("class"))
+            .addChild(new DependencyNode("arguments"))
+            .next(new MapNode("gpio"))
+                .addChild(new StringNode("pin"))
             .end()
         .end();
     }

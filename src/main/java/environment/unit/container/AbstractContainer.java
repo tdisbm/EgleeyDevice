@@ -2,11 +2,15 @@ package environment.unit.container;
 
 import environment.unit.dependency_injection.DependencyBuilder;
 import environment.unit.resolver.ResolverInterface;
+import environment.unit.tree_builder.TreeBuilder;
+import environment.unit.tree_builder.TreeRunner;
+import environment.unit.tree_builder.nodes.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -19,6 +23,8 @@ public abstract class AbstractContainer implements ContainerInterface
     private LinkedList<ResolverInterface> resolvers = new LinkedList<ResolverInterface>();
 
     private DependencyBuilder dependencyBuilder = new DependencyBuilder();
+
+    private TreeRunner runner;
 
     private boolean __compiled = false;
 
@@ -44,6 +50,11 @@ public abstract class AbstractContainer implements ContainerInterface
         }
 
         return result;
+    }
+
+    public final boolean has(String resource)
+    {
+        return (Boolean) this.elements.get(resource);
     }
 
     final public ContainerInterface addResolver(ResolverInterface resolver)
@@ -95,6 +106,25 @@ public abstract class AbstractContainer implements ContainerInterface
             return;
         }
 
+        AbstractNode mainRoot = new ArrayNode("main_root");
+        TreeBuilder builder;
+        Field treeBuilder;
+
+        for (ResolverInterface resolver : this.resolvers) {
+            try {
+                resolver.prefixing();
+                treeBuilder = resolver.getClass().getSuperclass().getDeclaredField("treeBuilder");
+                treeBuilder.setAccessible(true);
+
+                builder = (TreeBuilder) treeBuilder.get(resolver);
+                mainRoot.addChild(builder.getRoot().setParent(mainRoot));
+            } catch (Exception ignored) {}
+        }
+
+        this.runner = new TreeRunner(
+            new TreeBuilder(mainRoot)
+        );
+
         LinkedHashMap entities;
         Map.Entry current;
 
@@ -113,16 +143,42 @@ public abstract class AbstractContainer implements ContainerInterface
             }
         }
 
-        this.__compiled = true;
-
-        System.out.println("Container '" + this.getClass().getName() + "' is compiled");
-
-        this.dependencyBuilder.setResolvers(this.resolvers);
-        this.dependencyBuilder.buildDependencyTree(this);
+        this.buildDependencyTree();
+//
+//        this.__compiled = true;
+//
+//        System.out.println("Container '" + this.getClass().getName() + "' is compiled");
+//
+//        this.dependencyBuilder.compile(this);
     }
 
     final public boolean isCompiled()
     {
         return this.__compiled;
+    }
+
+    private void buildDependencyTree()
+    {
+        if (this.runner == null) {
+            return;
+        }
+
+        TreeBuilder dependencyTree = new TreeBuilder(new MapNode("dependencies"));
+        ArrayList<AbstractNode> depNodes = this.runner.findByClass(
+            DependencyNode.class,
+            null
+        );
+        ArrayList<AbstractNode> classNodes = this.runner.findByClass(
+            InstanceNode.class,
+            null
+        );
+
+        if (classNodes.size() == 0 || depNodes.size() == 0) {
+            return;
+        }
+
+        for (AbstractNode node : depNodes) {
+            node.link(this.elements);
+        }
     }
 }

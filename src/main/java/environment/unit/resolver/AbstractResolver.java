@@ -2,8 +2,12 @@ package environment.unit.resolver;
 
 import environment.unit.container.ContainerInterface;
 import environment.unit.tree_builder.TreeBuilder;
+import environment.unit.tree_builder.TreeRunner;
+import environment.unit.tree_builder.nodes.AbstractNode;
+import environment.unit.tree_builder.nodes.StringNode;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -115,7 +119,7 @@ public abstract class AbstractResolver implements ResolverInterface
         return this;
     }
 
-    private void prefixing() throws Exception
+    final public void prefixing() throws Exception
     {
         if (this.__prefixed__) {
             return;
@@ -145,7 +149,7 @@ public abstract class AbstractResolver implements ResolverInterface
         this.__prefixed__ = true;
     }
 
-    private void mapping() throws Exception {
+    public void mapping() throws Exception {
         if (this.__mapped__) {
             return;
         }

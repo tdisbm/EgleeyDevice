@@ -1,8 +1,8 @@
 package environment.unit.tree_builder.nodes;
 
-public class StringNode extends AbstractNode
+public class InstanceNode extends AbstractNode
 {
-    public StringNode(String name)
+    public InstanceNode(String name)
     {
         super(name);
     }

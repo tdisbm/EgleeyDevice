@@ -2,7 +2,11 @@ package environment.unit.tree_builder;
 
 
 import environment.unit.tree_builder.nodes.AbstractNode;
-import environment.unit.tree_builder.nodes.ArrayNode;
+import environment.unit.tree_builder.nodes.MapNode;
+import environment.unit.tree_builder.nodes.StringNode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 
 public class TreeBuilder
 {
@@ -10,23 +14,40 @@ public class TreeBuilder
 
     private AbstractNode current;
 
-    public TreeBuilder setRoot(String name)
+    public TreeBuilder() {}
+
+    public TreeBuilder(AbstractNode root)
     {
-        this.root = new ArrayNode(name);
+        this.root = root;
+    }
+
+    final public TreeBuilder setRoot(String name)
+    {
+        if (this.root != null) {
+            return this;
+        }
+
+        this.root = new MapNode(name);
         this.current = this.root;
 
         return this;
     }
 
-    public TreeBuilder addChild(AbstractNode node)
+    @Contract("null -> fail")
+    @NotNull
+    final public TreeBuilder addChild(AbstractNode node) throws Exception
     {
+        if (!(node instanceof StringNode)) {
+            this.current.addChild(node);
+            node.setRoot(this.root);
+        }
+
         node.setParent(this.current);
-        this.current.addChild(node);
 
         return this;
     }
 
-    public TreeBuilder end() throws Exception
+    final public TreeBuilder end() throws Exception
     {
         AbstractNode next = this.current.getParent();
 
@@ -39,16 +60,23 @@ public class TreeBuilder
         return this;
     }
 
-    public TreeBuilder next(AbstractNode next)
+    final public TreeBuilder next(AbstractNode next)
     {
-        this.current.addChild(next);
+        next.setRoot(this.root);
         next.setParent(this.current);
+
+        this.current.addChild(next);
         this.current = next;
 
         return this;
     }
 
-    public String getRootName()
+    final public AbstractNode getRoot()
+    {
+        return this.root;
+    }
+
+    final public String getRootName()
     {
         return this.root.getName();
     }

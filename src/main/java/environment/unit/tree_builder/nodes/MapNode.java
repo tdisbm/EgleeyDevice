@@ -1,9 +1,10 @@
 package environment.unit.tree_builder.nodes;
 
-public class StringNode extends AbstractNode
+import environment.unit.container.ContainerInterface;
+
+public class MapNode extends AbstractNode
 {
-    public StringNode(String name)
-    {
+    public MapNode(String name) {
         super(name);
     }
 

@@ -5,3 +5,5 @@ scenes:
         options:
             - main
         config:
+            - conf1
+            - conf2

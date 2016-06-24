@@ -15,6 +15,12 @@ public interface ContainerInterface
     Object get(String resource);
 
     /**
+     * @param resource String
+     * @return boolean
+     */
+    boolean has(String resource);
+
+    /**
      * compile elements of the container
      */
     void compile() throws IllegalAccessException;

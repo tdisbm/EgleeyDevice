@@ -3,6 +3,8 @@ package environment.worker.resolver;
 import environment.unit.resolver.AbstractResolver;
 import environment.unit.tree_builder.TreeBuilder;
 import environment.unit.tree_builder.nodes.ArrayNode;
+import environment.unit.tree_builder.nodes.InstanceNode;
+import environment.unit.tree_builder.nodes.MapNode;
 import environment.unit.tree_builder.nodes.StringNode;
 import scene.scenes.SceneInterface;
 
@@ -53,15 +55,13 @@ public class SceneResolver extends AbstractResolver
     public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
     {
         return treeBuilder.setRoot("scenes")
-            .next(new ArrayNode(null))
-                .addChild(new StringNode("class"))
-                .addChild(new StringNode("template"))
-                .next(new ArrayNode("options"))
-                    .addChild(new ArrayNode(null))
-                .end()
-                .next(new ArrayNode("config"))
-                    .addChild(new ArrayNode(null))
-                .end()
+            .addChild(new InstanceNode("class"))
+            .addChild(new StringNode("template"))
+            .next(new MapNode("options"))
+                .addChild(new ArrayNode(null))
+            .end()
+            .next(new MapNode("config"))
+                .addChild(new ArrayNode(null))
             .end()
         .end();
     }

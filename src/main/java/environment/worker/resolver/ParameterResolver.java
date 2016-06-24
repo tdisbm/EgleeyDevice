@@ -4,6 +4,7 @@ package environment.worker.resolver;
 import environment.unit.resolver.AbstractResolver;
 import environment.unit.tree_builder.TreeBuilder;
 import environment.unit.tree_builder.nodes.ArrayNode;
+import environment.unit.tree_builder.nodes.MapNode;
 import environment.unit.tree_builder.nodes.StringNode;
 
 import java.util.LinkedHashMap;
@@ -31,12 +32,6 @@ public class ParameterResolver extends AbstractResolver
 
     public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
     {
-        return treeBuilder.setRoot("parameters")
-            .addChild(new StringNode(null))
-        .end();
-    }
-
-    public String getProperty() {
-        return "parameters";
+        return treeBuilder.setRoot("parameters");
     }
 }
