@@ -10,7 +10,7 @@ public class DependencyNode extends Node
     }
 
     public boolean supports(Object value) {
-        return value != null && value instanceof ArrayList || value instanceof String;
+        return value != null && value instanceof ArrayList;
     }
 
     public Object linearize(Object complex, Object linearized) {

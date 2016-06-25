@@ -50,13 +50,19 @@ public abstract class Container
         return !this.__compiled__ ? null : this.definitions;
     }
 
-    public final boolean has(String resource)
-    {
+    final public Container set(String resource, Object definition) {
+        if (resource != null && !resource.isEmpty()) {
+            this.definitions.put(resource, definition);
+        }
+
+        return this;
+    }
+
+    public final boolean has(String resource) {
         return (Boolean) this.definitions.get(resource);
     }
 
-    final public Container extend(Extension extension)
-    {
+    final public Container extend(Extension extension) {
         extension.setContainer(this);
 
         this.extensions.add(extension);

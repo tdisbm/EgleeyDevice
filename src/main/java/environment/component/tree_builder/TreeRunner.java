@@ -8,13 +8,11 @@ public class TreeRunner
 {
     private TreeBuilder builder;
 
-    public TreeRunner(TreeBuilder builder)
-    {
+    public TreeRunner(TreeBuilder builder) {
         this.builder = builder;
     }
 
-    final public ArrayList<Node> findByClass(Class<?> clazz, Node from)
-    {
+    final public ArrayList<Node> findByClass(Class<?> clazz, Node from) {
         ArrayList<Node> list = new ArrayList<Node>();
         Node current = from == null ? this.builder.getRoot() : from;
 
@@ -39,8 +37,7 @@ public class TreeRunner
         return list;
     }
 
-    final public ArrayList<Node> findByName(String name, Node from)
-    {
+    final public ArrayList<Node> findByName(String name, Node from) {
         ArrayList<Node> list = new ArrayList<Node>();
         Node current = from == null ? this.builder.getRoot() : from;
 
@@ -63,8 +60,7 @@ public class TreeRunner
         return list;
     }
 
-    final public ArrayList<Node> getStack(Node from)
-    {
+    final public ArrayList<Node> getStack(Node from) {
         ArrayList<Node> list = new ArrayList<Node>();
         Node current = from == null ? this.builder.getRoot() : from;
 
@@ -77,5 +73,15 @@ public class TreeRunner
         }
 
         return list;
+    }
+
+    final public ArrayList linearizeValues(ArrayList<Node> nodes) {
+        ArrayList from = new ArrayList();
+
+        for (Node node : nodes) {
+            from.add(node.getValue());
+        }
+
+        return from;
     }
 }

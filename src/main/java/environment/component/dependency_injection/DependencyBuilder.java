@@ -6,7 +6,9 @@ import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.TreeRunner;
 import environment.component.tree_builder.nodes.*;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class DependencyBuilder
@@ -15,15 +17,11 @@ public class DependencyBuilder
 
     private TreeRunner runner;
 
-    private Node mainRoot;
-
-    private TreeBuilder builder;
-
     public DependencyBuilder setExtensions(LinkedList<Extension> extensions)
     {
         this.extensions = extensions;
 
-        this.mainRoot = new ArrayNode("main_root");
+        Node mainRoot = new ArrayNode("main_root");
         Field treeBuilder;
 
         for (Extension extension : this.extensions) {
@@ -31,13 +29,13 @@ public class DependencyBuilder
                 treeBuilder = extension.getClass().getSuperclass().getDeclaredField("treeBuilder");
                 treeBuilder.setAccessible(true);
 
-                this.builder = (TreeBuilder) treeBuilder.get(extension);
-                this.mainRoot.addChild(builder.getRoot().setParent(this.mainRoot));
+                TreeBuilder builder = (TreeBuilder) treeBuilder.get(extension);
+                mainRoot.addChild(builder.getRoot().setParent(mainRoot));
             } catch (Exception ignored) {}
         }
 
         this.runner = new TreeRunner(
-            new TreeBuilder(this.mainRoot)
+            new TreeBuilder(mainRoot)
         );
 
         return this;
@@ -94,6 +92,11 @@ public class DependencyBuilder
 
             dependencyTree.end();
         } catch (Exception ignored) {}
+
+        this.solveDependencyTree(
+            new TreeRunner(dependencyTree),
+            container
+        );
     }
 
     private void linkReferences(Node node, Container container) {
@@ -143,114 +146,93 @@ public class DependencyBuilder
         return null;
     }
 
-//    private LinkedHashMap buildDependencyMap(ContainerInterface container)
-//    {
-//        LinkedHashMap elements = new LinkedHashMap();
-//        LinkedHashMap dependencyMap = new LinkedHashMap();
-//
-//        try {
-//            Field f = container.getClass().getSuperclass().getDeclaredField("definitions");
-//            f.setAccessible(true);
-//            elements = (LinkedHashMap) f.get(container);
-//        }
-//        catch (NoSuchFieldException ignored) {}
-//        catch (IllegalAccessException ignored) {}
-//
-//        for (Object o : elements.entrySet()) {
-//            if (((Map.Entry) o).getValue() instanceof LinkedHashMap) {
-//                dependencyMap.put(
-//                    ((Map.Entry) o).getKey(),
-//                    this.find((LinkedHashMap) ((Map.Entry) o).getValue())
-//                );
+    private void solveDependencyTree(TreeRunner runner, Container container) {
+        LinkedHashMap dependencies = this.mergeMaps(
+            runner.linearizeValues(runner.findByClass(DependencyNode.class, null))
+        );
+        LinkedHashMap instances = this.mergeMaps(
+            runner.linearizeValues(runner.findByClass(InstanceNode.class, null))
+        );
+
+        Map<String, Class<?>> instanceClasses = new HashMap<String, Class<?>>();
+        Map<String, Object> loadedInstances = new HashMap<String, Object>();
+
+        Map.Entry current;
+
+        //boolean resolved = false;
+
+        try {
+            for (Object instance : instances.entrySet()) {
+                current = (Map.Entry) instance;
+                instanceClasses.put(
+                    (String) current.getKey(),
+                    Class.forName((String) current.getValue())
+                );
+
+                if (dependencies.get(current.getKey()) == null) {
+                    loadedInstances.put(
+                        (String) current.getKey(),
+                        instanceClasses.get(current.getKey()).getConstructor().newInstance()
+                    );
+                }
+            }
+
+
+//            while (!resolved) {
+//                resolved = true;
 //            }
-//        }
-//
-//        return dependencyMap;
-//    }
-//
-//    private ArrayList find(LinkedHashMap elements) {
-//        ArrayList dependencyMap = new ArrayList();
-//
-//        for (Object o : elements.entrySet()) {
-//            if (((Map.Entry) o).getValue() instanceof LinkedHashMap) {
-//                dependencyMap = this.find(
-//                    (LinkedHashMap) ((Map.Entry) o).getValue()
-//                );
-//            }
-//
-//            if (((Map.Entry) o).getValue() instanceof ArrayList) {
-//                ArrayList current = (ArrayList) ((Map.Entry) o).getValue();
-//                int i = 0;
-//
-//                while (current != null) {
-//                    if (i == current.size()) {
-//                        break;
-//                    }
-//
-//                    if (current.get(i) instanceof ArrayList) {
-//                        current = (ArrayList) current.get(i);
-//                        i = 0;
-//                    }
-//
-//                    if (current.get(i) instanceof String &&
-//                        this.hasResolver((String) current.get(i))
-//                    ) {
-//                        dependencyMap.add(current.get(i));
-//                    }
-//
-//                    i++;
-//                }
-//            }
-//
-//            if (((Map.Entry) o).getValue() instanceof String &&
-//                this.hasResolver((String) ((Map.Entry) o).getValue())
-//            ) {
-//                dependencyMap.add(((Map.Entry) o).getValue());
-//            }
-//        }
-//
-//        return dependencyMap;
-//    }
-//
-//    private boolean hasResolver(String str) {
-//        String prefix = str.substring(0, 1);
-//        String postfix = str.substring(str.length() - 1, str.length());
-//
-//        for (Extension r : this.extensions) {
-//            if (r.getPrefix().equals(prefix)) {
-//                return true;
-//            }
-//
-//            if (r.getPostfix().isEmpty()) {
-//                postfix = "";
-//            }
-//
-//            if (r.getPostfix().equals(postfix) && r.getPrefix().equals(prefix)) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    private Extension findResolver(String str) {
-//        String prefix = str.substring(0, 1);
-//        String postfix = str.substring(str.length() - 1, str.length());
-//
-//        for (Extension r : this.extensions) {
-//            if (r.getPrefix().equals(prefix)) {
-//                return r;
-//            }
-//
-//            if (r.getPostfix().isEmpty()) {
-//                postfix = "";
-//            }
-//
-//            if (r.getPostfix().equals(postfix) && r.getPrefix().equals(prefix)) {
-//                return r;
-//            }
-//        }
-//
-//        return null;
-//    }
+
+            ArrayList args = new ArrayList();
+            ArrayList dependenciesList;
+            String dependencyLocator;
+
+            for (Object dependency : dependencies.entrySet()) {
+                current = (Map.Entry) dependency;
+                dependenciesList = (ArrayList) current.getValue();
+                args.clear();
+
+                for (Object o : dependenciesList) {
+                    dependencyLocator = (String) o;
+
+                    args.add(instanceClasses.get(dependencyLocator) == null
+                        ? dependenciesList
+                        : instanceClasses.get(dependencyLocator)
+                    );
+                }
+
+                container.set(
+                    (String) current.getKey(),
+                    matchConstructor(
+                        instanceClasses.get(current.getKey()),
+                        dependenciesList
+                    ).newInstance(args)
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    private LinkedHashMap mergeMaps(ArrayList map) {
+        LinkedHashMap from = new LinkedHashMap();
+
+        for (Object entry : map) {
+            if (entry instanceof LinkedHashMap) {
+                from.putAll((Map) entry);
+            }
+        }
+
+        return from;
+    }
+
+    private Constructor<?> matchConstructor(Class clazz, ArrayList<?> arguments) throws NoSuchMethodException {
+        Class[] classes = new Class[arguments.size()];
+
+        for (int i = 0; i < classes.length; i++) {
+            classes[i] = arguments.get(i).getClass();
+        }
+
+        return clazz.getDeclaredConstructor(classes);
+    }
 }
