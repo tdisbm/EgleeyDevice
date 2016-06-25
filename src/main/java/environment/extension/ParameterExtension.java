@@ -1,16 +1,13 @@
-package environment.worker.resolver;
+package environment.extension;
 
 
-import environment.unit.resolver.AbstractResolver;
-import environment.unit.tree_builder.TreeBuilder;
-import environment.unit.tree_builder.nodes.ArrayNode;
-import environment.unit.tree_builder.nodes.MapNode;
-import environment.unit.tree_builder.nodes.StringNode;
+import environment.unit.Extension;
+import environment.component.tree_builder.TreeBuilder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ParameterResolver extends AbstractResolver
+public class ParameterExtension extends Extension
 {
     public Object resolve(Map.Entry entry) throws Exception
     {

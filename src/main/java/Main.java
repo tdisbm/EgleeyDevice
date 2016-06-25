@@ -7,9 +7,9 @@ public class Main extends Application {
 
     public static void main(String[] args) throws Exception {
         //SceneSwitcher switcher = new SceneSwitcher(stage);
-
+//        Hooker test = new Hooker(null, null);
         Kernel kernel = new Kernel();
-
+//
         kernel.up();
         //launch(args);
     }

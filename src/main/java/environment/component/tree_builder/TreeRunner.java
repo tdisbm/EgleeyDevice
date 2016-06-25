@@ -1,10 +1,8 @@
-package environment.unit.tree_builder;
+package environment.component.tree_builder;
 
-import environment.unit.tree_builder.nodes.*;
+import environment.component.tree_builder.nodes.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class TreeRunner
 {
@@ -15,10 +13,10 @@ public class TreeRunner
         this.builder = builder;
     }
 
-    final public ArrayList<AbstractNode> findByClass(Class<?> clazz, AbstractNode from)
+    final public ArrayList<Node> findByClass(Class<?> clazz, Node from)
     {
-        ArrayList<AbstractNode> list = new ArrayList<AbstractNode>();
-        AbstractNode current = from == null ? this.builder.getRoot() : from;
+        ArrayList<Node> list = new ArrayList<Node>();
+        Node current = from == null ? this.builder.getRoot() : from;
 
         if (this.builder.getRoot() == null) {
             return list;
@@ -34,17 +32,17 @@ public class TreeRunner
             list.add(current);
         }
 
-        for (AbstractNode node : current.getChildren()) {
+        for (Node node : current.getChildren()) {
             list.addAll(this.findByClass(clazz, node));
         }
 
         return list;
     }
 
-    final public ArrayList<AbstractNode> findByName(String name, AbstractNode from)
+    final public ArrayList<Node> findByName(String name, Node from)
     {
-        ArrayList<AbstractNode> list = new ArrayList<AbstractNode>();
-        AbstractNode current = from == null ? this.builder.getRoot() : from;
+        ArrayList<Node> list = new ArrayList<Node>();
+        Node current = from == null ? this.builder.getRoot() : from;
 
         if (this.builder.getRoot() == null) {
             return list;
@@ -58,23 +56,23 @@ public class TreeRunner
             list.add(current);
         }
 
-        for (AbstractNode node : current.getChildren()) {
+        for (Node node : current.getChildren()) {
             list.addAll(this.findByName(name, node));
         }
 
         return list;
     }
 
-    final public ArrayList<AbstractNode> getStack(AbstractNode from)
+    final public ArrayList<Node> getStack(Node from)
     {
-        ArrayList<AbstractNode> list = new ArrayList<AbstractNode>();
-        AbstractNode current = from == null ? this.builder.getRoot() : from;
+        ArrayList<Node> list = new ArrayList<Node>();
+        Node current = from == null ? this.builder.getRoot() : from;
 
         if (from != null) {
             list.add(from);
         }
 
-        for (AbstractNode node : current.getChildren()) {
+        for (Node node : current.getChildren()) {
             list.addAll(this.getStack(node));
         }
 

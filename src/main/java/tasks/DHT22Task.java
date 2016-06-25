@@ -1,9 +1,9 @@
 package tasks;
 
-import environment.unit.task.AbstractTask;
+import environment.extension.task.Task;
 import sensor.sensors.DHT22;
 
-public class DHT22Task extends AbstractTask
+public class DHT22Task extends Task
 {
     public void run()
     {

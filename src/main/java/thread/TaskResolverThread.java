@@ -1,8 +1,8 @@
-package environment.worker.thread;
+package thread;
 
 
-import environment.unit.container.ContainerInterface;
-import environment.unit.task.AbstractTask;
+import environment.unit.Container;
+import environment.extension.task.Task;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskResolverThread implements Runnable
 {
-    private ContainerInterface container;
+    private Container container;
 
-    public TaskResolverThread(ContainerInterface container)
+    public TaskResolverThread(Container container)
     {
         this.container = container;
     }
@@ -29,7 +29,7 @@ public class TaskResolverThread implements Runnable
         }
 
         for (Object o : tasks.entrySet()) {
-            AbstractTask task = (AbstractTask) ((Map.Entry) o).getValue();
+            Task task = (Task) ((Map.Entry) o).getValue();
             task.setContainer(this.container);
 
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();

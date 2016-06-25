@@ -1,12 +1,11 @@
 package environment;
 
-import environment.unit.container.AbstractContainer;
-import environment.unit.container.ContainerInterface;
+import environment.unit.Container;
 
 import java.util.LinkedHashMap;
 
 
-public class AppContainer extends AbstractContainer
+public class AppContainer extends Container
 {
     private LinkedHashMap scenes;
 
@@ -28,7 +27,7 @@ public class AppContainer extends AbstractContainer
         return scenes;
     }
 
-    public AppContainer setSensors(LinkedHashMap sensors)
+    public Container setSensors(LinkedHashMap sensors)
     {
         this.sensors = sensors;
 
@@ -40,7 +39,7 @@ public class AppContainer extends AbstractContainer
         return sensors;
     }
 
-    public ContainerInterface setParameters(LinkedHashMap parameters) {
+    public Container setParameters(LinkedHashMap parameters) {
         this.parameters = parameters;
 
         return this;
@@ -51,7 +50,7 @@ public class AppContainer extends AbstractContainer
         return parameters;
     }
 
-    public AppContainer setTasks(LinkedHashMap tasks) {
+    public Container setTasks(LinkedHashMap tasks) {
         this.tasks = tasks;
 
         return this;

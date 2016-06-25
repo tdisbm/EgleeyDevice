@@ -1,19 +1,18 @@
-package environment.worker.resolver;
+package environment.extension;
 
-import environment.unit.resolver.AbstractResolver;
-import environment.unit.task.AbstractTask;
-import environment.unit.tree_builder.TreeBuilder;
-import environment.unit.tree_builder.nodes.ArrayNode;
-import environment.unit.tree_builder.nodes.InstanceNode;
-import environment.unit.tree_builder.nodes.StringNode;
-import environment.worker.thread.TaskResolverThread;
+import environment.unit.Extension;
+import environment.extension.task.Task;
+import environment.component.tree_builder.TreeBuilder;
+import environment.component.tree_builder.nodes.DependencyNode;
+import environment.component.tree_builder.nodes.InstanceNode;
+import environment.component.tree_builder.nodes.StringNode;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TaskResolver extends AbstractResolver
+public class TaskExtension extends Extension
 {
     public Object resolve(Map.Entry entry) throws Exception
     {
@@ -24,7 +23,7 @@ public class TaskResolver extends AbstractResolver
             .forName(className)
             .getConstructor();
 
-        AbstractTask task = (AbstractTask) cons.newInstance();
+        Task task = (Task) cons.newInstance();
         //task.setContainer(this.getContainer());
 
         Field rate = task
@@ -61,6 +60,7 @@ public class TaskResolver extends AbstractResolver
         return treeBuilder.setRoot("tasks")
             .addChild(new InstanceNode("class"))
             .addChild(new StringNode("rate"))
+            .addChild(new DependencyNode("arguments"))
         .end();
     }
 }

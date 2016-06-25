@@ -1,15 +1,15 @@
-package environment.worker.resolver;
+package environment.extension;
 
-import environment.unit.resolver.AbstractResolver;
-import environment.unit.tree_builder.TreeBuilder;
-import environment.unit.tree_builder.nodes.*;
+import environment.unit.Extension;
+import environment.component.tree_builder.TreeBuilder;
+import environment.component.tree_builder.nodes.*;
 import sensor.SensorInterface;
 
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SensorResolver extends AbstractResolver
+public class SensorExtension extends Extension
 {
     public Object resolve(Map.Entry entry) throws Exception
     {

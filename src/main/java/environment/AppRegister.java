@@ -1,11 +1,11 @@
 package environment;
 
-import environment.unit.container.ContainerInterface;
-import environment.unit.resolver.ResolverInterface;
-import environment.worker.resolver.ParameterResolver;
-import environment.worker.resolver.SceneResolver;
-import environment.worker.resolver.SensorResolver;
-import environment.worker.resolver.TaskResolver;
+import environment.unit.Container;
+import environment.unit.Extension;
+import environment.extension.ParameterExtension;
+import environment.extension.SceneExtension;
+import environment.extension.SensorExtension;
+import environment.extension.TaskExtension;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -14,15 +14,15 @@ public class AppRegister
 {
     private LinkedList<File> resources;
 
-    private LinkedList<ResolverInterface> resolvers;
+    private LinkedList<Extension> extensions;
 
-    private ContainerInterface container;
+    private Container container;
 
     public AppRegister()
     {
         this.container = new AppContainer();
         this.resources = new LinkedList<File>();
-        this.resolvers = new LinkedList<ResolverInterface>();
+        this.extensions = new LinkedList<Extension>();
 
         this.appDefault();
     }
@@ -36,10 +36,10 @@ public class AppRegister
         .registerResource(new File("config/tasks.yml"))
         .registerResource(new File("config/parameters.yml"))
 
-        .registerResolver(new SceneResolver())
-        .registerResolver(new ParameterResolver())
-        .registerResolver(new TaskResolver())
-        .registerResolver(new SensorResolver());
+        .extend(new SceneExtension())
+        .extend(new ParameterExtension())
+        .extend(new TaskExtension())
+        .extend(new SensorExtension());
     }
 
     final public AppRegister registerResource(File resource)
@@ -51,18 +51,17 @@ public class AppRegister
         return this;
     }
 
-    final public AppRegister registerResolver(ResolverInterface resolver)
-    {
-        resolver.setContainer(this.container);
-        this.container.addResolver(resolver);
-        this.resolvers.add(resolver);
+    final public AppRegister extend(Extension extension) {
+        extension.setContainer(this.container);
+        this.container.extend(extension);
+        this.extensions.add(extension);
 
         return this;
     }
 
-    public LinkedList<ResolverInterface> getResolvers()
+    public LinkedList<Extension> getExtensions()
     {
-        return this.resolvers;
+        return this.extensions;
     }
 
     public LinkedList<File> getResources()
@@ -70,7 +69,7 @@ public class AppRegister
         return this.resources;
     }
 
-    public ContainerInterface getContainer()
+    public Container getContainer()
     {
         return this.container;
     }

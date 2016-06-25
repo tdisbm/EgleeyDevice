@@ -1,11 +1,11 @@
-package environment.unit.task;
+package environment.extension.task;
 
-import environment.unit.container.ContainerInterface;
+import environment.unit.Container;
 
 
-public abstract class AbstractTask implements Runnable
+public abstract class Task implements Runnable
 {
-    private ContainerInterface container;
+    private Container container;
 
     private int rate;
 
@@ -14,7 +14,7 @@ public abstract class AbstractTask implements Runnable
         return this.container.get(key);
     }
 
-    final public AbstractTask setContainer(ContainerInterface container)
+    final public Task setContainer(Container container)
     {
         this.container = container;
 

@@ -2,14 +2,12 @@ package environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import environment.unit.container.ContainerInterface;
-import environment.unit.resolver.ResolverInterface;
+import environment.unit.Container;
 
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
 
 public class Kernel
 {
@@ -25,7 +23,7 @@ public class Kernel
 
     private Kernel loadResources()
     {
-        ContainerInterface container = this.register.getContainer();
+        Container container = this.register.getContainer();
 
         for (File f : this.register.getResources()) {
             try {
@@ -54,9 +52,9 @@ public class Kernel
             e.printStackTrace();
         }
 
-//        LinkedList<ResolverInterface> resolvers = this.register.getResolvers();
+//        LinkedList<Extension> resolvers = this.register.getExtensions();
 //
-//        for (ResolverInterface o : resolvers) {
+//        for (Extension o : resolvers) {
 //            try {
 //                o.resolve();
 //            } catch (Exception e) {

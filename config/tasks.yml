@@ -6,4 +6,6 @@ tasks:
     symbiosis:
         class: tasks.SymbiosisTask
         rate: 5000
+        arguments:
+            - '@DHT22'
 

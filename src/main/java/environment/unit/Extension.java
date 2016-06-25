@@ -1,20 +1,15 @@
-package environment.unit.resolver;
+package environment.unit;
 
-import environment.unit.container.ContainerInterface;
-import environment.unit.tree_builder.TreeBuilder;
-import environment.unit.tree_builder.TreeRunner;
-import environment.unit.tree_builder.nodes.AbstractNode;
-import environment.unit.tree_builder.nodes.StringNode;
+import environment.component.tree_builder.TreeBuilder;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public abstract class AbstractResolver implements ResolverInterface
+public abstract class Extension
 {
-    private ContainerInterface container;
+    private Container container;
 
     private TreeBuilder treeBuilder = new TreeBuilder();
 
@@ -24,8 +19,7 @@ public abstract class AbstractResolver implements ResolverInterface
 
     private boolean __mapped__ = false;
 
-    public AbstractResolver()
-    {
+    public Extension() {
         try {
             this.treeBuilder = this.buildConfigTree(this.treeBuilder);
 
@@ -43,10 +37,9 @@ public abstract class AbstractResolver implements ResolverInterface
     }
     /**
      * @param container ContainerInterface
-     * @return ResolverInterface
+     * @return Extension
      */
-    final public ResolverInterface setContainer(ContainerInterface container)
-    {
+    final public Extension setContainer(Container container) {
         this.container = container;
 
         return this;
@@ -56,8 +49,7 @@ public abstract class AbstractResolver implements ResolverInterface
     /**
      * @throws Exception
      */
-    final public void resolve() throws Exception
-    {
+    final public void resolve() throws Exception {
         if (this.__resolved__) {
             throw new Exception("Resolver '" + this.getClass() + "' was already resolved");
         }
@@ -103,7 +95,7 @@ public abstract class AbstractResolver implements ResolverInterface
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    private ResolverInterface setElements(LinkedHashMap elements) throws
+    private Extension setElements(LinkedHashMap elements) throws
         IllegalAccessException,
         NoSuchFieldException
     {
@@ -119,8 +111,7 @@ public abstract class AbstractResolver implements ResolverInterface
         return this;
     }
 
-    final public void prefixing() throws Exception
-    {
+    final public void prefixing() throws Exception {
         if (this.__prefixed__) {
             return;
         }
@@ -157,25 +148,33 @@ public abstract class AbstractResolver implements ResolverInterface
         if (!this.__prefixed__) {
             return;
         }
-
-        LinkedHashMap mapped = new LinkedHashMap();
-        LinkedHashMap elements = this.getElements();
-        Map.Entry entry;
-
-        if (null == elements) {
-            return;
-        }
-
-        for (Object o : elements.entrySet()) {
-            entry = (Map.Entry) o;
-
-            mapped.put(
-                entry.getKey(),
-                this.resolve(entry)
-            );
-        }
-
-        this.setElements(mapped);
+//
+//        LinkedHashMap mapped = new LinkedHashMap();
+//        LinkedHashMap elements = this.getElements();
+//        Map.Entry entry;
+//
+//        if (null == elements) {
+//            return;
+//        }
+//
+//        for (Object o : elements.entrySet()) {
+//            entry = (Map.Entry) o;
+//
+//            mapped.put(
+//                entry.getKey(),
+//                this.resolve(entry)
+//            );
+//        }
+//
+//        this.setElements(mapped);
         this.__mapped__ = true;
     }
+
+    public abstract void done(LinkedHashMap definitions);
+
+    public abstract String getPrefix();
+
+    public abstract String getPostfix();
+
+    public abstract TreeBuilder buildConfigTree(TreeBuilder builder) throws Exception;
 }

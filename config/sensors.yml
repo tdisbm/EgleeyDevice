@@ -2,7 +2,13 @@ sensors:
     DHT22:
         class: sensor.sensors.DHT22
         arguments:
-          - ['#DHT22']
+          - ['#DHT22', '#DHT55']
         gpio:
             pin: 7
 
+    DHT11:
+        class: sensor.sensors.DHT22
+        arguments:
+          - ['#DHT22', '#DHT55']
+        gpio:
+            pin: 7
