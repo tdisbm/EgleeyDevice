@@ -1,10 +1,10 @@
 package environment.component.dependency_injection;
 
-import environment.unit.Container;
-import environment.unit.Extension;
 import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.TreeRunner;
 import environment.component.tree_builder.nodes.*;
+import environment.unit.Container;
+import environment.unit.Extension;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -97,7 +97,7 @@ public class DependencyBuilder
     }
 
     private void linkReferences(Node node, Container container) {
-        LinkedHashMap definitions = null;
+        LinkedHashMap<?, ?> definitions = null;
         LinkedHashMap result = new LinkedHashMap();
         Object current;
 
@@ -113,8 +113,8 @@ public class DependencyBuilder
             return;
         }
 
-        for (Object definition : definitions.entrySet()) {
-            current = this.findByLevel(((Map.Entry) definition).getValue(), node.getLevel());
+        for (Map.Entry<?, ?> definition : definitions.entrySet()) {
+            current = this.findByLevel(definition.getValue(), node.getLevel());
 
             if (!(current instanceof Set)) {
                 continue;
@@ -122,7 +122,7 @@ public class DependencyBuilder
 
             for (Object o : (Set) current) {
                 if (((Map.Entry) o).getKey().equals(node.getName()) && node.supports(((Map.Entry) o).getValue())) {
-                    result.put(((Map.Entry) definition).getKey(), node.linearize(((Map.Entry) o).getValue(), null));
+                    result.put(definition.getKey(), node.linearize(((Map.Entry) o).getValue(), null));
                 }
             }
         }
