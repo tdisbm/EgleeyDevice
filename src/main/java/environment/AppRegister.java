@@ -1,18 +1,18 @@
 package environment;
 
-import environment.resolver.DependencyResolver;
-import environment.unit.container.Container;
+import environment.resolver.dependency_injection.DependencyResolver;
+import environment.unit.Container;
 import environment.unit.Extension;
 import environment.extension.ParameterExtension;
 import environment.extension.SceneExtension;
 import environment.extension.SensorExtension;
 import environment.extension.TaskExtension;
-import environment.unit.container.ContainerResolver;
+import environment.resolver.container.ContainerResolver;
 
 import java.io.File;
 import java.util.LinkedList;
 
-public class AppRegister
+class AppRegister
 {
     private LinkedList<File> resources;
 
@@ -22,7 +22,7 @@ public class AppRegister
 
     private Container container;
 
-    public AppRegister()
+    AppRegister()
     {
         this.container = new AppContainer();
         this.resources = new LinkedList<>();
@@ -43,13 +43,13 @@ public class AppRegister
 
         .registerResolver(new DependencyResolver())
 
-        .extend(new SceneExtension())
-        .extend(new ParameterExtension())
-        .extend(new TaskExtension())
-        .extend(new SensorExtension());
+        .registerExtension(new SceneExtension())
+        .registerExtension(new ParameterExtension())
+        .registerExtension(new TaskExtension())
+        .registerExtension(new SensorExtension());
     }
 
-    final public AppRegister registerResource(File resource)
+    final AppRegister registerResource(File resource)
     {
         if (resource.exists()) {
             this.resources.add(resource);
@@ -58,7 +58,7 @@ public class AppRegister
         return this;
     }
 
-    final public AppRegister registerResolver(ContainerResolver resolver)
+    final AppRegister registerResolver(ContainerResolver resolver)
     {
         this.resolvers.add(resolver);
         this.container.addResolver(resolver);
@@ -66,7 +66,7 @@ public class AppRegister
         return this;
     }
 
-    final public AppRegister extend(Extension extension) {
+    final AppRegister registerExtension(Extension extension) {
         extension.setContainer(this.container);
         this.container.extend(extension);
         this.extensions.add(extension);
@@ -74,17 +74,22 @@ public class AppRegister
         return this;
     }
 
-    public LinkedList<Extension> getExtensions()
+    final LinkedList<Extension> getExtensions()
     {
         return this.extensions;
     }
 
-    public LinkedList<File> getResources()
+    final LinkedList<ContainerResolver> getResolvers()
+    {
+        return this.resolvers;
+    }
+
+    final LinkedList<File> getResources()
     {
         return this.resources;
     }
 
-    public Container getContainer()
+    final Container getContainer()
     {
         return this.container;
     }

@@ -2,7 +2,9 @@ package environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import environment.unit.container.Container;
+import environment.unit.Extension;
+import environment.unit.Container;
+import environment.resolver.container.ContainerResolver;
 
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -17,8 +19,10 @@ public class Kernel
 
     final public void up()
     {
-        this.loadResources();
-        this.loadContainer();
+        this
+
+        .loadResources()
+        .loadContainer();
     }
 
     private Kernel loadResources()
@@ -47,6 +51,24 @@ public class Kernel
             this.register.getContainer().compile();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        }
+
+        return this;
+    }
+
+    final public Kernel extend(Object o) {
+        if (o instanceof ContainerResolver) {
+            this.register.registerResolver((ContainerResolver) o);
+            return this;
+        }
+
+        if (o instanceof Extension) {
+            this.register.registerExtension((Extension) o);
+            return this;
+        }
+
+        if (o instanceof File) {
+            this.register.registerResource((File) o);
         }
 
         return this;

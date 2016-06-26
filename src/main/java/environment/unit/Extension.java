@@ -1,7 +1,6 @@
 package environment.unit;
 
 import environment.component.tree_builder.TreeBuilder;
-import environment.unit.container.Container;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -112,7 +111,7 @@ public abstract class Extension
         return this;
     }
 
-    final public void prefixing() throws Exception {
+    final void prefixing() throws Exception {
         if (this.__prefixed__) {
             return;
         }
@@ -141,7 +140,7 @@ public abstract class Extension
         this.__prefixed__ = true;
     }
 
-    public void mapping() throws Exception {
+    final public void mapping() throws Exception {
         if (this.__mapped__) {
             return;
         }

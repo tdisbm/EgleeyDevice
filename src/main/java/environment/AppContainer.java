@@ -1,11 +1,11 @@
 package environment;
 
-import environment.unit.container.Container;
+import environment.unit.Container;
 
 import java.util.LinkedHashMap;
 
 
-public class AppContainer extends Container
+class AppContainer extends Container
 {
     private LinkedHashMap scenes;
 

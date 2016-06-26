@@ -1,19 +1,19 @@
-package environment.component.dependency_injection;
+package environment.resolver.dependency_injection;
 
 import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.TreeRunner;
 import environment.component.tree_builder.nodes.*;
 import environment.unit.Extension;
-import environment.unit.container.Container;
+import environment.unit.Container;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class DependencyTreeBuilder
+class DependencyTreeBuilder
 {
     private TreeRunner runner;
 
-    public DependencyTreeBuilder(LinkedList<Extension> extensions) {
+    DependencyTreeBuilder(LinkedList<Extension> extensions) {
         Node mainRoot = new ArrayNode("main_root");
         Field treeBuilder;
 
@@ -32,7 +32,7 @@ public class DependencyTreeBuilder
         );
     }
 
-    public TreeRunner build(Container container) {
+    final TreeRunner build(Container container) {
         if (this.runner == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public class DependencyTreeBuilder
 
     private void linkReferences(Node node, Container container) {
         LinkedHashMap<?, ?> definitions = null;
-        LinkedHashMap result = new LinkedHashMap();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         Object current;
 
         try {
@@ -97,7 +97,10 @@ public class DependencyTreeBuilder
                 if (((Map.Entry) o).getKey().equals(node.getName()) &&
                     node.supports(((Map.Entry) o).getValue())
                 ) {
-                    result.put(definition.getKey(), node.linearize(((Map.Entry) o).getValue(), null));
+                    result.put(
+                        (String) definition.getKey(),
+                        node.linearize(((Map.Entry) o).getValue(), null)
+                    );
                 }
             }
         }

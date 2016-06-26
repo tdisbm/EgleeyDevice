@@ -13,7 +13,7 @@ public class TreeRunner
     }
 
     final public ArrayList<Node> findByClass(Class<?> clazz, Node from) {
-        ArrayList<Node> list = new ArrayList<Node>();
+        ArrayList<Node> list = new ArrayList<>();
         Node current = from == null ? this.builder.getRoot() : from;
 
         if (this.builder.getRoot() == null) {
@@ -38,7 +38,7 @@ public class TreeRunner
     }
 
     final public ArrayList<Node> findByName(String name, Node from) {
-        ArrayList<Node> list = new ArrayList<Node>();
+        ArrayList<Node> list = new ArrayList<>();
         Node current = from == null ? this.builder.getRoot() : from;
 
         if (this.builder.getRoot() == null) {
@@ -61,7 +61,7 @@ public class TreeRunner
     }
 
     final public ArrayList<Node> getStack(Node from) {
-        ArrayList<Node> list = new ArrayList<Node>();
+        ArrayList<Node> list = new ArrayList<>();
         Node current = from == null ? this.builder.getRoot() : from;
 
         if (from != null) {
@@ -76,7 +76,7 @@ public class TreeRunner
     }
 
     final public ArrayList linearizeValues(ArrayList<Node> nodes) {
-        ArrayList from = new ArrayList();
+        ArrayList<Object> from = new ArrayList<>();
 
         for (Node node : nodes) {
             from.add(node.getValue());

@@ -1,10 +1,10 @@
-package environment.component.dependency_injection;
+package environment.component.util.instance;
 
 import java.util.ArrayList;
 
 public class InstanceLoader {
 
-    private Object newInstance(Class clazz, ArrayList<?> arguments) {
+    private static Object newInstance(Class<?> clazz, ArrayList<?> arguments) {
         Class[] classes = new Class[arguments.size()];
 
         for (int i = 0; i < classes.length; i++) {

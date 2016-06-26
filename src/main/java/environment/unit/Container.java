@@ -1,6 +1,6 @@
-package environment.unit.container;
+package environment.unit;
 
-import environment.unit.Extension;
+import environment.resolver.container.ContainerResolver;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.IntrospectionException;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public abstract class Container
 {
-    private LinkedHashMap definitions = new LinkedHashMap();
+    private LinkedHashMap<String, Object> definitions = new LinkedHashMap<>();
 
     private LinkedList<Extension> extensions = new LinkedList<>();
 
@@ -139,7 +139,7 @@ public abstract class Container
                 current = (Map.Entry) o;
 
                 this.definitions.put(
-                    current.getKey(),
+                    (String) current.getKey(),
                     current.getValue()
                 );
             }

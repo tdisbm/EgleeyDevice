@@ -1,6 +1,7 @@
-package environment.unit.container;
+package environment.resolver.container;
 
 import environment.unit.Extension;
+import environment.unit.Container;
 
 import java.util.LinkedList;
 
@@ -16,7 +17,7 @@ public abstract class ContainerResolver
         return this;
     }
 
-    public LinkedList<Extension> getExtensions() {
+    final protected LinkedList<Extension> getExtensions() {
         return extensions;
     }
 }

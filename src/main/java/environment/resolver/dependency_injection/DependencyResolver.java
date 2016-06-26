@@ -1,15 +1,14 @@
-package environment.resolver;
+package environment.resolver.dependency_injection;
 
-import environment.component.dependency_injection.DependencyTreeBuilder;
 import environment.component.tree_builder.TreeRunner;
 import environment.component.tree_builder.nodes.DependencyNode;
 import environment.component.tree_builder.nodes.InstanceNode;
-import environment.unit.container.Container;
-import environment.unit.container.ContainerResolver;
+import environment.unit.Container;
+import environment.resolver.container.ContainerResolver;
 
 import java.util.*;
 
-import static environment.unit.graph.TopologicalSort.topologicalSort;
+import static environment.component.util.graph.TopologicalSort.topologicalSort;
 
 public class DependencyResolver extends ContainerResolver {
 
@@ -25,37 +24,57 @@ public class DependencyResolver extends ContainerResolver {
             runner.linearizeValues(runner.findByClass(InstanceNode.class, null))
         );
 
-        Map<String, Class<?>> instanceClasses = new HashMap<String, Class<?>>();
-        ArrayList<String> instancesKeySet = new ArrayList<String>(instances.keySet());
+        Map<String, Class<?>> instanceClasses = this.getInstanceClasses(instances);
+
+        List<Integer> loadStackIndexes = topologicalSort(this.createDependenctMatrix(
+            instances,
+            dependencies,
+            container
+        ));
+
+        Collections.reverse(loadStackIndexes);
+    }
+
+    private Map<String, Class<?>> getInstanceClasses(LinkedHashMap<String, ?> instances) {
+        Map<String, Class<?>> classes = new HashMap<>();
 
         for (Map.Entry<String, ?> instance : instances.entrySet()) {
             try {
-                instanceClasses.put(
+                classes.put(
                     instance.getKey(),
                     Class.forName((String) instance.getValue())
                 );
             } catch (ClassNotFoundException e) {
                 System.out.format("Fatal error: Can't find class %s" + instance.getValue());
+                System.exit(1);
             }
         }
 
+        return classes;
+    }
+
+    private List<Integer>[] createDependenctMatrix(
+        LinkedHashMap<String, ?> instances,
+        LinkedHashMap<String, ?> dependencies,
+        Container container
+    ) {
+        ArrayList<String> instancesKeySet = new ArrayList<>(instances.keySet());
+
+        int[][] dependencyMatrixMirror = new int[instances.size()][instances.size()];
         List<Integer>[] dependencyMatrix = new List[instances.size()];
-        int[][] dependencyMatrixMirror;
 
         for (int i = 0; i < instances.size(); i++) {
-            dependencyMatrix[i] = new ArrayList<Integer>();
+            dependencyMatrix[i] = new ArrayList<>();
         }
 
-        dependencyMatrixMirror = new int[instances.size()][instances.size()];
-
         for (Map.Entry<String, ?> dependency : dependencies.entrySet()) {
-            for (Object dependencyLocator : (ArrayList) dependency.getValue()) {
-                if (!(dependencyLocator instanceof String)) {
+            for (String dependencyLocator : (ArrayList<? extends String>) dependency.getValue()) {
+                if (!(dependencyLocator != null)) {
                     continue;
                 }
 
-                if (!container.has((String) dependencyLocator) &&
-                        container.hasExtension((String) dependencyLocator)
+                if (!container.has(dependencyLocator) &&
+                    container.hasExtension(dependencyLocator)
                         ) {
                     System.out.format(
                         "Fatal error: '%s' has dependency to non existent definition '%s'",
@@ -71,7 +90,7 @@ public class DependencyResolver extends ContainerResolver {
                 }
 
                 dependencyMatrix[instancesKeySet.indexOf(dependency.getKey())].add(
-                    instancesKeySet.indexOf(dependencyLocator)
+                        instancesKeySet.indexOf(dependencyLocator)
                 );
 
                 dependencyMatrixMirror
@@ -87,20 +106,7 @@ public class DependencyResolver extends ContainerResolver {
             System.exit(1);
         }
 
-        List<Integer> loadStackIndexes = topologicalSort(dependencyMatrix);
-        Collections.reverse(loadStackIndexes);
-    }
-
-    private LinkedHashMap<String, ?> mergeMaps(ArrayList map) {
-        LinkedHashMap<String, ?> merged = new LinkedHashMap();
-
-        for (Object entry : map) {
-            if (entry instanceof LinkedHashMap) {
-                merged.putAll((Map) entry);
-            }
-        }
-
-        return merged;
+        return dependencyMatrix;
     }
 
     private void validateDependencyMatrix(int[][] matrix) throws Exception {
@@ -115,5 +121,17 @@ public class DependencyResolver extends ContainerResolver {
                 }
             }
         }
+    }
+
+    private LinkedHashMap<String, ?> mergeMaps(ArrayList map) {
+        LinkedHashMap<String, ?> merged = new LinkedHashMap<>();
+
+        for (Object entry : map) {
+            if (entry instanceof LinkedHashMap) {
+                merged.putAll((Map) entry);
+            }
+        }
+
+        return merged;
     }
 }
