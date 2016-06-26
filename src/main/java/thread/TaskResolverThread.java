@@ -1,8 +1,8 @@
 package thread;
 
 
-import environment.unit.Container;
 import environment.extension.task.Task;
+import environment.unit.Container;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 public class TaskResolverThread implements Runnable
 {
     private Container container;
+    private static final long outOfMemoryDelay = 20;
+    private static final int aditionalOutOfMemoryDelay = 2000000;
+    private int succedJobs = 0;
 
     public TaskResolverThread(Container container)
     {
@@ -22,18 +25,37 @@ public class TaskResolverThread implements Runnable
     public void run() {
         while (!this.container.isCompiled()) {}
 
-        LinkedHashMap tasks = (LinkedHashMap) this.container.get("tasks");
+        LinkedHashMap<?, Task> tasks = (LinkedHashMap) this.container.get("tasks");
 
         if (null == tasks) {
             return;
         }
 
-        for (Object o : tasks.entrySet()) {
-            Task task = (Task) ((Map.Entry) o).getValue();
+        for (Map.Entry<?,Task> o : tasks.entrySet()) {
+            Task task = o.getValue();
             task.setContainer(this.container);
 
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-            executor.scheduleAtFixedRate(task, 0, task.getRate(), TimeUnit.MILLISECONDS);
+            if(runSafeThreads(task)){
+                succedJobs++;
+            }
         }
+    }
+
+    private boolean runSafeThreads(Task task) {
+        boolean succes = false;
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        try {
+            executor.scheduleAtFixedRate(task, 0, task.getRate(), TimeUnit.MILLISECONDS);
+            succes =  true;
+        } catch (OutOfMemoryError e) {
+            try {
+                executor.wait(outOfMemoryDelay, aditionalOutOfMemoryDelay);
+                runSafeThreads(task);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+                succes = false;
+            }
+        }
+        return succes;
     }
 }
