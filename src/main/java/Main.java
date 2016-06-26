@@ -1,4 +1,5 @@
 import environment.Kernel;
+import environment.unit.Extension;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import scene.SceneSwitcher;
@@ -7,7 +8,7 @@ public class Main extends Application {
 
     public static void main(String[] args) throws Exception {
         //SceneSwitcher switcher = new SceneSwitcher(stage);
-//        Hooker test = new Hooker(null, null);
+
         Kernel kernel = new Kernel();
 //
         kernel.up();

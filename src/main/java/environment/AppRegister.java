@@ -1,11 +1,13 @@
 package environment;
 
-import environment.unit.Container;
+import environment.resolver.DependencyResolver;
+import environment.unit.container.Container;
 import environment.unit.Extension;
 import environment.extension.ParameterExtension;
 import environment.extension.SceneExtension;
 import environment.extension.SensorExtension;
 import environment.extension.TaskExtension;
+import environment.unit.container.ContainerResolver;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -16,13 +18,16 @@ public class AppRegister
 
     private LinkedList<Extension> extensions;
 
+    private LinkedList<ContainerResolver> resolvers;
+
     private Container container;
 
     public AppRegister()
     {
         this.container = new AppContainer();
-        this.resources = new LinkedList<File>();
-        this.extensions = new LinkedList<Extension>();
+        this.resources = new LinkedList<>();
+        this.extensions = new LinkedList<>();
+        this.resolvers = new LinkedList<>();
 
         this.appDefault();
     }
@@ -36,6 +41,8 @@ public class AppRegister
         .registerResource(new File("config/tasks.yml"))
         .registerResource(new File("config/parameters.yml"))
 
+        .registerResolver(new DependencyResolver())
+
         .extend(new SceneExtension())
         .extend(new ParameterExtension())
         .extend(new TaskExtension())
@@ -47,6 +54,14 @@ public class AppRegister
         if (resource.exists()) {
             this.resources.add(resource);
         }
+
+        return this;
+    }
+
+    final public AppRegister registerResolver(ContainerResolver resolver)
+    {
+        this.resolvers.add(resolver);
+        this.container.addResolver(resolver);
 
         return this;
     }

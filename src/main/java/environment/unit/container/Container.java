@@ -1,6 +1,6 @@
-package environment.unit;
+package environment.unit.container;
 
-import environment.component.dependency_injection.DependencyBuilder;
+import environment.unit.Extension;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.IntrospectionException;
@@ -15,9 +15,9 @@ public abstract class Container
 {
     private LinkedHashMap definitions = new LinkedHashMap();
 
-    private LinkedList<Extension> extensions = new LinkedList<Extension>();
+    private LinkedList<Extension> extensions = new LinkedList<>();
 
-    private DependencyBuilder dependencyBuilder = new DependencyBuilder();
+    private LinkedList<ContainerResolver> resolvers = new LinkedList<>();
 
     private boolean __compiled__ = false;
 
@@ -37,9 +37,7 @@ public abstract class Container
                 field.setAccessible(true);
                 result = field.get(this);
             }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
@@ -59,7 +57,7 @@ public abstract class Container
     }
 
     public final boolean has(String resource) {
-        return (Boolean) this.definitions.get(resource);
+        return !(this.definitions.get(resource) == null);
     }
 
     final public Container extend(Extension extension) {
@@ -111,9 +109,9 @@ public abstract class Container
 
         this.linearize();
 
-        this.dependencyBuilder
-            .setExtensions(this.extensions)
-            .compile(this);
+        for (ContainerResolver resolver: this.resolvers) {
+            resolver.resolve(this);
+        }
 
         this.__compiled__ = true;
     }
@@ -148,6 +146,39 @@ public abstract class Container
         }
 
         this.__linearized__ = true;
+    }
+
+    public boolean hasExtension(String definition) {
+        String prefix;
+        String postfix;
+
+        String definitionPrefix = definition.substring(0, 1);
+        String definitionPostfix = definition.substring(definition.length() - 1, definition.length());
+
+        for (Extension e : this.extensions) {
+            prefix = e.getPrefix();
+            postfix = e.getPostfix();
+
+            if (prefix.equals(definitionPrefix)) {
+                if (postfix == null || postfix.isEmpty()) {
+                    postfix = "";
+                    definitionPostfix = "";
+                }
+
+                if (postfix.equals(definitionPostfix) && prefix.equals(definitionPrefix)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    final public Container addResolver(ContainerResolver resolver){
+        resolver.setExtensions(this.extensions);
+        this.resolvers.add(resolver);
+
+        return this;
     }
 
     final public boolean isCompiled() {
