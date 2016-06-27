@@ -27,7 +27,7 @@ public class ParameterExtension extends Extension
         return "%";
     }
 
-    public TreeBuilder buildConfigTree(TreeBuilder treeBuilder) throws Exception
+    public TreeBuilder buildDefinitionPrototype(TreeBuilder treeBuilder) throws Exception
     {
         return treeBuilder.setRoot("parameters");
     }

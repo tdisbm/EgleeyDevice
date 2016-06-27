@@ -21,7 +21,7 @@ public abstract class Extension
 
     public Extension() {
         try {
-            this.treeBuilder = this.buildConfigTree(this.treeBuilder);
+            this.treeBuilder = this.buildDefinitionPrototype(this.treeBuilder);
 
             if (null == this.treeBuilder) {
                 throw new Exception("Resolver '" + this.getClass() + "' is not configured");
@@ -176,5 +176,5 @@ public abstract class Extension
 
     public abstract String getPostfix();
 
-    public abstract TreeBuilder buildConfigTree(TreeBuilder builder) throws Exception;
+    public abstract TreeBuilder buildDefinitionPrototype(TreeBuilder builder) throws Exception;
 }
