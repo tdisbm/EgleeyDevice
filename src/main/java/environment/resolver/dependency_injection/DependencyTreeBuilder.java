@@ -70,6 +70,19 @@ class DependencyTreeBuilder
         return new TreeRunner(dependencyTree);
     }
 
+    private Object findByLevel(Object definitions, int level) {
+        if (level == 0) {
+            return definitions;
+        }
+
+        if (definitions instanceof LinkedHashMap) {
+            level -= 1;
+            return findByLevel(((LinkedHashMap) definitions).entrySet(), level);
+        }
+
+        return null;
+    }
+
     private void linkReferences(Node node, Container container) {
         LinkedHashMap<?, ?> definitions = null;
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
@@ -106,18 +119,5 @@ class DependencyTreeBuilder
         }
 
         node.setValue(result);
-    }
-
-    private Object findByLevel(Object definitions, int level) {
-        if (level == 0) {
-            return definitions;
-        }
-
-        if (definitions instanceof LinkedHashMap) {
-            level -= 1;
-            return findByLevel(((LinkedHashMap) definitions).entrySet(), level);
-        }
-
-        return null;
     }
 }

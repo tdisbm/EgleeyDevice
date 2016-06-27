@@ -1,7 +1,7 @@
 package environment.extension;
 
 import environment.unit.Extension;
-import environment.extension.task.Task;
+import tasks.Task;
 import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.nodes.DependencyNode;
 import environment.component.tree_builder.nodes.InstanceNode;

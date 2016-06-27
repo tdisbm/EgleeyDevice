@@ -1,6 +1,5 @@
 package tasks;
 
-import environment.extension.task.Task;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import sensor.sensors.DHT22;

@@ -1,7 +1,7 @@
 package thread;
 
 
-import environment.extension.task.Task;
+import tasks.Task;
 import environment.unit.Container;
 
 import java.util.LinkedHashMap;

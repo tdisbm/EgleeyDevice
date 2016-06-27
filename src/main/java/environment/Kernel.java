@@ -11,22 +11,19 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-public class Kernel
-{
+public class Kernel {
     private AppRegister register = new AppRegister();
 
     private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-    final public void up()
-    {
+    final public void up() {
         this
 
         .loadResources()
         .loadContainer();
     }
 
-    private Kernel loadResources()
-    {
+    private Kernel loadResources() {
         Container container = this.register.getContainer();
 
         for (File f : this.register.getResources()) {
@@ -45,8 +42,7 @@ public class Kernel
         return this;
     }
 
-    private Kernel loadContainer()
-    {
+    private Kernel loadContainer() {
         try {
             this.register.getContainer().compile();
         } catch (IllegalAccessException e) {

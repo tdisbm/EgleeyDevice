@@ -23,17 +23,13 @@ public abstract class Container
 
     private boolean __linearized__ = false;
 
-    @Nullable
-    final public Object get(String resource) {
-        if (!this.__compiled__) {
-            return null;
-        }
 
-        return this.definitions.get(resource);
-    }
+    final public Container extend(Extension extension) {
+        extension.setContainer(this);
 
-    final public LinkedHashMap get() {
-        return !this.__compiled__ ? null : this.definitions;
+        this.extensions.add(extension);
+
+        return this;
     }
 
     final public Container set(String resource, Object definition) {
@@ -48,17 +44,65 @@ public abstract class Container
         return this;
     }
 
+    final public Container addResolver(ContainerResolver resolver){
+        resolver.setExtensions(this.extensions);
+        this.resolvers.add(resolver);
+
+        return this;
+    }
+
+
     final public boolean has(String resource) {
         return !(this.definitions.get(resource) == null);
     }
 
-    final public Container extend(Extension extension) {
-        extension.setContainer(this);
+    final public boolean hasExtension(String definition) {
+        String prefix;
+        String postfix;
 
-        this.extensions.add(extension);
+        String definitionPrefix = definition.substring(0, 1);
+        String definitionPostfix = definition.substring(definition.length() - 1, definition.length());
 
-        return this;
+        for (Extension e : this.extensions) {
+            prefix = e.getPrefix();
+            postfix = e.getPostfix();
+
+            if (prefix.equals(definitionPrefix)) {
+                if (postfix == null || postfix.isEmpty()) {
+                    postfix = "";
+                    definitionPostfix = "";
+                }
+
+                if (postfix.equals(definitionPostfix) && prefix.equals(definitionPrefix)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
+
+    final public boolean isCompiled() {
+        return this.__compiled__;
+    }
+
+    final public boolean isLinearized() {
+        return this.__linearized__;
+    }
+
+    @Nullable
+    final public Object get(String resource) {
+        if (!this.__compiled__) {
+            return null;
+        }
+
+        return this.definitions.get(resource);
+    }
+
+    final public LinkedHashMap get() {
+        return !this.__compiled__ ? null : this.definitions;
+    }
+
 
     final public void merge(Container container) throws
         IntrospectionException,
@@ -106,47 +150,6 @@ public abstract class Container
         }
 
         this.__compiled__ = true;
-    }
-
-    final public boolean hasExtension(String definition) {
-        String prefix;
-        String postfix;
-
-        String definitionPrefix = definition.substring(0, 1);
-        String definitionPostfix = definition.substring(definition.length() - 1, definition.length());
-
-        for (Extension e : this.extensions) {
-            prefix = e.getPrefix();
-            postfix = e.getPostfix();
-
-            if (prefix.equals(definitionPrefix)) {
-                if (postfix == null || postfix.isEmpty()) {
-                    postfix = "";
-                    definitionPostfix = "";
-                }
-
-                if (postfix.equals(definitionPostfix) && prefix.equals(definitionPrefix)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    final public Container addResolver(ContainerResolver resolver){
-        resolver.setExtensions(this.extensions);
-        this.resolvers.add(resolver);
-
-        return this;
-    }
-
-    final public boolean isCompiled() {
-        return this.__compiled__;
-    }
-
-    final public boolean isLinearized() {
-        return this.__linearized__;
     }
 
     private void linearize() throws IllegalAccessException {

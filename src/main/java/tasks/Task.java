@@ -1,4 +1,4 @@
-package environment.extension.task;
+package tasks;
 
 import environment.unit.Container;
 
@@ -9,20 +9,17 @@ public abstract class Task implements Runnable
 
     private int rate;
 
-    final public Object get(String key)
-    {
+    final public Object get(String key) {
         return this.container.get(key);
     }
 
-    final public Task setContainer(Container container)
-    {
+    final public Task setContainer(Container container) {
         this.container = container;
 
         return this;
     }
 
-    final public int getRate()
-    {
+    final public int getRate() {
         return this.rate;
     }
 }
