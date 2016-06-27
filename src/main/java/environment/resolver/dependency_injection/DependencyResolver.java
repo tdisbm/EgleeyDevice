@@ -24,15 +24,31 @@ public class DependencyResolver extends ContainerResolver {
             runner.linearizeValues(runner.findByClass(InstanceNode.class, null))
         );
 
+        this.createInstances(instances, dependencies, container);
+    }
+
+    private void createInstances(
+        LinkedHashMap<String, ?> instances,
+        LinkedHashMap<String, ?> dependencies,
+        Container container
+    ) {
         Map<String, Class<?>> instanceClasses = this.getInstanceClasses(instances);
+        Map<String, Object> instanceList = new HashMap<>();
 
-        List<Integer> loadStackIndexes = topologicalSort(this.createDependenctMatrix(
-            instances,
-            dependencies,
-            container
-        ));
+        List<Integer> loadStack = this.getLoadStackIndexes(instances, dependencies, container);
 
-        Collections.reverse(loadStackIndexes);
+        ArrayList<Class> instancesValues = (new ArrayList<>(instanceClasses.values()));
+        Map<String, Boolean> isInstantinated = new HashMap<>();
+
+        ArrayList<?> arguments = new ArrayList<>();
+
+        for (int i : loadStack) {
+//            for (Map.Entry<String, ?> j : dependencies.get()) {
+//                arguments.add(instancesValues.get(instances.get))
+//            }
+            arguments.clear();
+            System.out.println();
+        }
     }
 
     private Map<String, Class<?>> getInstanceClasses(LinkedHashMap<String, ?> instances) {
@@ -53,25 +69,39 @@ public class DependencyResolver extends ContainerResolver {
         return classes;
     }
 
-    private List<Integer>[] createDependenctMatrix(
+    private List<Integer> getLoadStackIndexes(
+        LinkedHashMap<String, ?> instances,
+        LinkedHashMap<String, ?> dependencies,
+        Container container
+    ) {
+        List<Integer> loadStackIndexes = topologicalSort(this.createDependencyMatrix(
+            instances,
+            dependencies,
+            container
+        ));
+
+        Collections.reverse(loadStackIndexes);
+
+        return loadStackIndexes;
+    }
+
+    private List<Integer>[] createDependencyMatrix(
         LinkedHashMap<String, ?> instances,
         LinkedHashMap<String, ?> dependencies,
         Container container
     ) {
         ArrayList<String> instancesKeySet = new ArrayList<>(instances.keySet());
-
-        int[][] dependencyMatrixMirror = new int[instances.size()][instances.size()];
         List<Integer>[] dependencyMatrix = new List[instances.size()];
 
         for (int i = 0; i < instances.size(); i++) {
             dependencyMatrix[i] = new ArrayList<>();
         }
 
+        String dependencyLocator;
+
         for (Map.Entry<String, ?> dependency : dependencies.entrySet()) {
-            for (String dependencyLocator : (ArrayList<? extends String>) dependency.getValue()) {
-                if (!(dependencyLocator != null)) {
-                    continue;
-                }
+            for (Object o : (ArrayList) dependency.getValue()) {
+                dependencyLocator = o.toString();
 
                 if (!container.has(dependencyLocator) &&
                     container.hasExtension(dependencyLocator)
@@ -90,17 +120,13 @@ public class DependencyResolver extends ContainerResolver {
                 }
 
                 dependencyMatrix[instancesKeySet.indexOf(dependency.getKey())].add(
-                        instancesKeySet.indexOf(dependencyLocator)
+                    instancesKeySet.indexOf(dependencyLocator)
                 );
-
-                dependencyMatrixMirror
-                    [instancesKeySet.indexOf(dependency.getKey())]
-                    [instancesKeySet.indexOf(dependencyLocator)] = 1;
             }
         }
 
         try {
-            this.validateDependencyMatrix(dependencyMatrixMirror);
+            this.validateDependencyMatrix(dependencyMatrix);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -109,14 +135,24 @@ public class DependencyResolver extends ContainerResolver {
         return dependencyMatrix;
     }
 
-    private void validateDependencyMatrix(int[][] matrix) throws Exception {
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i][i] == 1) {
+    private void validateDependencyMatrix(List<Integer>[] matrix) throws Exception {
+        int[][] mirror = new int[matrix.length][matrix.length];
+        int iterator = -1;
+
+        for (List<Integer> i : matrix) {
+            iterator++;
+            for (int j : i) {
+                mirror[iterator][j] = 1;
+            }
+        }
+
+        for (int i = 0; i < mirror.length; i++) {
+            if (mirror[i][i] == 1) {
                 throw new Exception("Fatal error: Definition can't be dependent by self");
             }
 
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] == 1 && matrix[j][i] == 1) {
+            for (int j = 0; j < mirror[i].length; j++) {
+                if (mirror[i][j] == 1 && mirror[j][i] == 1) {
                     throw new Exception("Fatal error: Circular dependency detected");
                 }
             }
