@@ -11,38 +11,22 @@ import java.util.Map;
 
 public class SensorExtension extends Extension
 {
-    public Object resolve(Map.Entry entry) throws Exception
-    {
-        LinkedHashMap current = (LinkedHashMap) entry.getValue();
-        LinkedHashMap gpio = (LinkedHashMap) current.get("gpio");
-
-        Constructor<?> cons = Class
-            .forName((String) current.get("class"))
-            .getConstructor(int.class);
-
-        Object obj;
-
-        if (!((obj = cons.newInstance(gpio.get("pin"))) instanceof SensorInterface)) {
+    @Override
+    public void map(Object definition, Map.Entry prototype) throws Exception {
+        if (!(definition instanceof SensorInterface)) {
             throw new Exception("Sensor class must implement SensorInterface");
         }
-
-        return obj;
     }
 
-    public void done(LinkedHashMap instances) {}
-
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return "@";
     }
 
-    public String getPostfix()
-    {
+    public String getPostfix() {
         return "";
     }
 
-    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception
-    {
+    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception {
         return treeBuilder.setRoot("sensors")
             .addChild(new InstanceNode("class"))
             .addChild(new DependencyNode("arguments"))

@@ -7,18 +7,11 @@ import scene.SceneSwitcher;
 public class Main extends Application {
 
     public static void main(String[] args) throws Exception {
-        //SceneSwitcher switcher = new SceneSwitcher(stage);
-
-        Kernel kernel = new Kernel();
-//
-        kernel.up();
-        //launch(args);
+        new Kernel().up();
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        SceneSwitcher switcher = new SceneSwitcher(stage);
-
         Kernel kernel = new Kernel();
 
         kernel.up();

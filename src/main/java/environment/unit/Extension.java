@@ -13,8 +13,6 @@ public abstract class Extension
 
     private TreeBuilder treeBuilder = new TreeBuilder();
 
-    private boolean __resolved__ = false;
-
     private boolean __prefixed__ = false;
 
     private boolean __mapped__ = false;
@@ -43,26 +41,6 @@ public abstract class Extension
         this.container = container;
 
         return this;
-    }
-
-
-    /**
-     * @throws Exception
-     */
-    final public void resolve() throws Exception {
-        if (this.__resolved__) {
-            throw new Exception("Resolver '" + this.getClass() + "' was already resolved");
-        }
-
-        if (null == this.container) {
-            throw new Exception("Container is not provided to resolver");
-        }
-
-        this.prefixing();
-        this.mapping();
-        this.done(this.getElements());
-
-        this.__resolved__ = true;
     }
 
     /**
@@ -148,29 +126,30 @@ public abstract class Extension
         if (!this.__prefixed__) {
             return;
         }
-//
-//        LinkedHashMap mapped = new LinkedHashMap();
-//        LinkedHashMap elements = this.getElements();
-//        Map.Entry entry;
-//
-//        if (null == elements) {
-//            return;
-//        }
-//
-//        for (Object o : elements.entrySet()) {
-//            entry = (Map.Entry) o;
-//
-//            mapped.put(
-//                entry.getKey(),
-//                this.resolve(entry)
-//            );
-//        }
-//
-//        this.setElements(mapped);
+
+        if (null == this.container) {
+            throw new Exception("Container is not provided to resolver");
+        }
+
+        LinkedHashMap elements = this.getElements();
+        Map.Entry entry;
+        Object definition;
+
+        if (null == elements) {
+            return;
+        }
+
+        for (Object o : elements.entrySet()) {
+            entry = (Map.Entry) o;
+            definition = this.container.get((String) entry.getKey());
+
+            this.map(definition, entry);
+        }
+
         this.__mapped__ = true;
     }
 
-    public abstract void done(LinkedHashMap definitions);
+    public abstract void map(Object definition, Map.Entry prototype) throws Exception;
 
     public abstract String getPrefix();
 

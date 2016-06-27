@@ -1,6 +1,7 @@
 package environment.extension;
 
 
+import environment.component.tree_builder.nodes.DependencyNode;
 import environment.unit.Extension;
 import environment.component.tree_builder.TreeBuilder;
 
@@ -9,15 +10,8 @@ import java.util.Map;
 
 public class ParameterExtension extends Extension
 {
-    public Object resolve(Map.Entry entry) throws Exception
-    {
-        return entry.getValue();
-    }
-
-    public void done(LinkedHashMap instances)
-    {
-
-    }
+    @Override
+    public void map(Object definition, Map.Entry prototype) {}
 
     public String getPrefix() {
         return "%";
@@ -27,8 +21,7 @@ public class ParameterExtension extends Extension
         return "%";
     }
 
-    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception
-    {
-        return treeBuilder.setRoot("parameters");
+    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception {
+        return new TreeBuilder(new DependencyNode("parameters"));
     }
 }

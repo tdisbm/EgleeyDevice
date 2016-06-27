@@ -27,9 +27,4 @@ public class DependencyNode extends Node
 
         return linearizedMirror;
     }
-
-    public Object link(Object elements)
-    {
-        return elements;
-    }
 }

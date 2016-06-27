@@ -92,7 +92,7 @@ public abstract class Container
 
     @Nullable
     final public Object get(String resource) {
-        if (!this.__compiled__) {
+        if (!this.__compiled__ || !this.__linearized__) {
             return null;
         }
 
@@ -145,11 +145,20 @@ public abstract class Container
 
         this.linearize();
 
-        for (ContainerResolver resolver: this.resolvers) {
-            resolver.resolve(this);
-        }
+        try {
+            for (ContainerResolver resolver: this.resolvers) {
+                resolver.resolve(this);
+            }
 
-        this.__compiled__ = true;
+            this.__compiled__ = true;
+
+            for (Extension extension : this.extensions) {
+                extension.mapping();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private void linearize() throws IllegalAccessException {

@@ -14,31 +14,19 @@ import java.util.Map;
 
 public class SceneExtension extends Extension
 {
-    public Object resolve(Map.Entry entry) throws Exception
-    {
-        LinkedHashMap current = (LinkedHashMap) entry.getValue();
-        Constructor<?> cons = Class
-            .forName((String) current.get("class"))
-            .getConstructor();
-
-        Object obj;
-
-        if (!((obj = cons.newInstance()) instanceof SceneInterface)) {
+    @Override
+    public void map(Object definition, Map.Entry prototype) throws Exception {
+        if (!(definition instanceof SceneInterface)) {
             throw new Exception("Scene class must implement SceneInterface");
         }
-
-        return obj;
     }
-
-    public void done(LinkedHashMap instances) {}
 
     /**
      * prefix to identify resolved options
      *
      * @return String
      */
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return "@";
     }
 
@@ -47,13 +35,11 @@ public class SceneExtension extends Extension
      *
      * @return String
      */
-    public String getPostfix()
-    {
+    public String getPostfix() {
         return "";
     }
 
-    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception
-    {
+    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception {
         return treeBuilder.setRoot("scenes")
             .addChild(new InstanceNode("class"))
             .addChild(new StringNode("template"))
@@ -64,13 +50,5 @@ public class SceneExtension extends Extension
                 .addChild(new ArrayNode(null))
             .end()
         .end();
-    }
-
-    /**
-     * @return String
-     */
-    public String getProperty()
-    {
-        return "scenes";
     }
 }

@@ -1,57 +1,47 @@
 package environment.extension;
 
 import environment.unit.Extension;
-import tasks.Task;
 import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.nodes.DependencyNode;
 import environment.component.tree_builder.nodes.InstanceNode;
 import environment.component.tree_builder.nodes.StringNode;
+import tasks.Task;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TaskExtension extends Extension
 {
-    public Object resolve(Map.Entry entry) throws Exception
-    {
-        LinkedHashMap config = (LinkedHashMap) entry.getValue();
-        String className = (String) config.get("class");
+    private static final long OUT_OF_MEMORY_DELAY = 20;
 
-        Constructor<?> cons = Class
-            .forName(className)
-            .getConstructor();
+    private static final int  OUT_OF_MEMORY_ADDITIONAL_DELAY = 2000000;
 
-        Task task = (Task) cons.newInstance();
-        //task.setContainer(this.getContainer());
+    private int succedJobs = 0;
 
-        Field rate = task
-            .getClass()
-            .getSuperclass()
-            .getDeclaredField("rate");
+    @Override
+    public void map(Object definition, Map.Entry prototype) throws Exception {
+        if (!(definition instanceof Task)) {
+            throw new Exception("tasks must be instance of Task");
+        }
 
-        rate.setAccessible(true);
-        rate.set(task, config.get("rate"));
-        rate.setAccessible(false);
+        LinkedHashMap config = (LinkedHashMap) prototype.getValue();
+        Task task = (Task) definition;
 
-        return task;
+        task.setRate((Integer) config.get("rate"));
+
+        if (runSafeThreads(task)) {
+            succedJobs++;
+        }
     }
 
-    public void done(LinkedHashMap instances)
-    {
-        //TaskResolverThread resolverThread = new TaskResolverThread(this.getContainer());
-        //Thread master = new Thread(resolverThread);
-        //master.start();
-    }
-
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return "#";
     }
 
-    public String getPostfix()
-    {
+    public String getPostfix() {
         return "";
     }
 
@@ -62,5 +52,25 @@ public class TaskExtension extends Extension
             .addChild(new StringNode("rate"))
             .addChild(new DependencyNode("arguments"))
         .end();
+    }
+
+    private boolean runSafeThreads(Task task) {
+        boolean success = false;
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        try {
+            executor.scheduleAtFixedRate(task, 0, task.getRate(), TimeUnit.MILLISECONDS);
+            success =  true;
+        } catch (OutOfMemoryError e) {
+            try {
+                executor.wait(OUT_OF_MEMORY_DELAY, OUT_OF_MEMORY_ADDITIONAL_DELAY);
+                runSafeThreads(task);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+                success = false;
+            }
+        }
+
+        return success;
     }
 }

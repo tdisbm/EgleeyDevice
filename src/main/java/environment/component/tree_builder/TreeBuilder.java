@@ -15,6 +15,8 @@ public class TreeBuilder
     public TreeBuilder() {}
 
     public TreeBuilder(Node root) {
+        root.setRoot(root);
+
         this.root = root;
         this.current = root;
     }

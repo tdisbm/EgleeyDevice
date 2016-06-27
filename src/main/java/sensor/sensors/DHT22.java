@@ -14,6 +14,8 @@ public class DHT22 implements SensorInterface
 
     private int pin;
 
+    private Map<String, Float> currentState = new HashMap<>();
+
     private float temperature;
     private float humidity;
 
@@ -26,32 +28,26 @@ public class DHT22 implements SensorInterface
         this.pin = pin;
     }
 
-    public Map<String, String> read() {
-        Map<String, String> data = new HashMap<>();
-
+    public Map<String, Float> read() {
         for (int i = 0; i < READ_ATTEMPTS; i++) {
             if (this.collectData() == 1) break;
         }
 
-        data.put("temperature", String.valueOf(this.temperature));
-        data.put("humidity", String.valueOf(this.humidity));
-
-        return data;
+        return this.currentState;
     }
 
-    public Map<String, String> getCurrent()
+    public Map<String, Float> getCurrent()
     {
-        Map<String, String> data = new HashMap<>();
-
-        data.put("temperature", String.valueOf(this.temperature));
-        data.put("humidity", String.valueOf(this.humidity));
-
-        return data;
+        return this.currentState;
     }
 
     private int collectData() {
         this.temperature = (float) Math.random();
         this.humidity = (float) Math.random();
+
+        this.currentState.put("temperature", this.temperature);
+        this.currentState.put("humidity", this.humidity);
+
         return 1;
 // TODO@: to enable on raspberry pi migration
 //        int laststate = Gpio.HIGH;
