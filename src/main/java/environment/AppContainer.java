@@ -5,8 +5,7 @@ import environment.unit.Container;
 import java.util.LinkedHashMap;
 
 
-class AppContainer extends Container
-{
+class AppContainer extends Container {
     private LinkedHashMap scenes;
 
     private LinkedHashMap tasks;
@@ -15,8 +14,7 @@ class AppContainer extends Container
 
     private LinkedHashMap parameters;
 
-    public AppContainer setScenes(LinkedHashMap scenes)
-    {
+    public AppContainer setScenes(LinkedHashMap scenes) {
         this.scenes = scenes;
 
         return this;
@@ -27,15 +25,13 @@ class AppContainer extends Container
         return scenes;
     }
 
-    public Container setSensors(LinkedHashMap sensors)
-    {
+    public Container setSensors(LinkedHashMap sensors) {
         this.sensors = sensors;
 
         return this;
     }
 
-    public LinkedHashMap getSensors()
-    {
+    public LinkedHashMap getSensors() {
         return sensors;
     }
 
@@ -45,8 +41,7 @@ class AppContainer extends Container
         return this;
     }
 
-    public LinkedHashMap getParameters()
-    {
+    public LinkedHashMap getParameters() {
         return parameters;
     }
 

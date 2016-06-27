@@ -17,7 +17,7 @@ public class DHT22 implements SensorInterface
     private float temperature;
     private float humidity;
 
-    public DHT22(int pin) throws Exception {
+    public DHT22(Integer pin) throws Exception {
 // @TODO: to enable on raspberry pi migration
 //        if (Gpio.wiringPiSetup() == -1) {
 //            throw new Exception("Can't setup wiring pi module");
@@ -27,7 +27,7 @@ public class DHT22 implements SensorInterface
     }
 
     public Map<String, String> read() {
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
 
         for (int i = 0; i < READ_ATTEMPTS; i++) {
             if (this.collectData() == 1) break;
@@ -41,7 +41,7 @@ public class DHT22 implements SensorInterface
 
     public Map<String, String> getCurrent()
     {
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
 
         data.put("temperature", String.valueOf(this.temperature));
         data.put("humidity", String.valueOf(this.humidity));

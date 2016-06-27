@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class InstanceLoader {
 
-    private static Object newInstance(Class<?> clazz, ArrayList<?> arguments) {
+    public static Object newInstance(Class<?> clazz, ArrayList<?> arguments) {
         Class[] classes = new Class[arguments.size()];
 
         for (int i = 0; i < classes.length; i++) {
@@ -12,7 +12,7 @@ public class InstanceLoader {
         }
 
         try {
-            return clazz.getDeclaredConstructor(classes).newInstance(arguments);
+            return clazz.getConstructor(classes).newInstance(arguments.toArray());
         } catch (Exception e) {
             e.printStackTrace();
         }

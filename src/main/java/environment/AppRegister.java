@@ -12,8 +12,7 @@ import environment.resolver.container.ContainerResolver;
 import java.io.File;
 import java.util.LinkedList;
 
-class AppRegister
-{
+class AppRegister {
     private LinkedList<File> resources;
 
     private LinkedList<Extension> extensions;
@@ -22,8 +21,7 @@ class AppRegister
 
     private Container container;
 
-    AppRegister()
-    {
+    AppRegister() {
         this.container = new AppContainer();
         this.resources = new LinkedList<>();
         this.extensions = new LinkedList<>();
@@ -32,8 +30,7 @@ class AppRegister
         this.appDefault();
     }
 
-    private void appDefault()
-    {
+    private void appDefault() {
         this
 
         .registerResource(new File("config/scenes.yml"))
@@ -49,8 +46,7 @@ class AppRegister
         .registerExtension(new SensorExtension());
     }
 
-    final AppRegister registerResource(File resource)
-    {
+    final AppRegister registerResource(File resource) {
         if (resource.exists()) {
             this.resources.add(resource);
         }
@@ -58,8 +54,7 @@ class AppRegister
         return this;
     }
 
-    final AppRegister registerResolver(ContainerResolver resolver)
-    {
+    final AppRegister registerResolver(ContainerResolver resolver) {
         this.resolvers.add(resolver);
         this.container.addResolver(resolver);
 
@@ -74,23 +69,19 @@ class AppRegister
         return this;
     }
 
-    final LinkedList<Extension> getExtensions()
-    {
+    final LinkedList<Extension> getExtensions() {
         return this.extensions;
     }
 
-    final LinkedList<ContainerResolver> getResolvers()
-    {
+    final LinkedList<ContainerResolver> getResolvers() {
         return this.resolvers;
     }
 
-    final LinkedList<File> getResources()
-    {
+    final LinkedList<File> getResources() {
         return this.resources;
     }
 
-    final Container getContainer()
-    {
+    final Container getContainer() {
         return this.container;
     }
 }

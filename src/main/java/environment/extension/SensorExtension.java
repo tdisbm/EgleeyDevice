@@ -41,7 +41,7 @@ public class SensorExtension extends Extension
         return "";
     }
 
-    public TreeBuilder buildDefinitionPrototype(TreeBuilder treeBuilder) throws Exception
+    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception
     {
         return treeBuilder.setRoot("sensors")
             .addChild(new InstanceNode("class"))

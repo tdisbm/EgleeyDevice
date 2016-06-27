@@ -13,7 +13,7 @@ public class SymbiosisTask extends Task
     private String host = "http://127.0.0.1:8000";
     private IO.Options opts = new IO.Options();
 
-    public SymbiosisTask()
+    public SymbiosisTask(DHT22 dht22)
     {
         try {
             this.opts.query = "type=device&email=test";

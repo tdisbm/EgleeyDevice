@@ -9,6 +9,7 @@ import environment.resolver.container.ContainerResolver;
 import java.util.*;
 
 import static environment.component.util.graph.TopologicalSort.topologicalSort;
+import static environment.component.util.instance.InstanceLoader.newInstance;
 
 public class DependencyResolver extends ContainerResolver {
 
@@ -24,35 +25,64 @@ public class DependencyResolver extends ContainerResolver {
             runner.linearizeValues(runner.findByClass(InstanceNode.class, null))
         );
 
-        this.createInstances(instances, dependencies, container);
+        this.push(container, this.createInstances(instances, dependencies, container));
     }
 
-    private void createInstances(
+    private LinkedHashMap<String, Object> createInstances(
         LinkedHashMap<String, ?> instances,
         LinkedHashMap<String, ?> dependencies,
         Container container
     ) {
-        Map<String, Class<?>> instanceClasses = this.getInstanceClasses(instances);
-        Map<String, Object> instanceList = new HashMap<>();
+        LinkedHashMap<String, Class<?>> classes = this.getInstanceClasses(instances);
+        LinkedHashMap<String, Object> loaded = new LinkedHashMap<>();
+
+        Object instance;
 
         List<Integer> loadStack = this.getLoadStackIndexes(instances, dependencies, container);
+        ArrayList<String> dependencyArgumentNames;
+        ArrayList<Object> arguments = new ArrayList<>();
 
-        ArrayList<Class> instancesValues = (new ArrayList<>(instanceClasses.values()));
-        Map<String, Boolean> isInstantinated = new HashMap<>();
-
-        ArrayList<?> arguments = new ArrayList<>();
+        String[] instanceKeys = Arrays.copyOf(
+            classes.keySet().toArray(),
+            classes.keySet().toArray().length,
+            String[].class
+        );
 
         for (int i : loadStack) {
-//            for (Map.Entry<String, ?> j : dependencies.get()) {
-//                arguments.add(instancesValues.get(instances.get))
-//            }
+            if (dependencies.get(instanceKeys[i]) != null &&
+                dependencies.get(instanceKeys[i]) instanceof ArrayList
+            ) {
+                dependencyArgumentNames = (ArrayList<String>) dependencies.get(instanceKeys[i]);
+
+                for (Object argument : dependencyArgumentNames) {
+                    arguments.add(null != loaded.get(argument.toString())
+                        ? loaded.get(argument.toString())
+                        : argument
+                    );
+                }
+            }
+
+            instance = newInstance(classes.get(instanceKeys[i]), arguments);
+
+            if (null == instance) {
+                throw new Error("Can't create instance for definition " + instanceKeys[i]);
+            }
+
+            loaded.put(instanceKeys[i], instance);
             arguments.clear();
-            System.out.println();
+        }
+
+        return loaded;
+    }
+
+    private void push(Container container, LinkedHashMap<String, Object> instances) {
+        for (Map.Entry<String, Object> obj : instances.entrySet()) {
+            container.set(obj.getKey(), obj.getValue());
         }
     }
 
-    private Map<String, Class<?>> getInstanceClasses(LinkedHashMap<String, ?> instances) {
-        Map<String, Class<?>> classes = new HashMap<>();
+    private LinkedHashMap<String, Class<?>> getInstanceClasses(LinkedHashMap<String, ?> instances) {
+        LinkedHashMap<String, Class<?>> classes = new LinkedHashMap<>();
 
         for (Map.Entry<String, ?> instance : instances.entrySet()) {
             try {
@@ -105,7 +135,7 @@ public class DependencyResolver extends ContainerResolver {
 
                 if (!container.has(dependencyLocator) &&
                     container.hasExtension(dependencyLocator)
-                        ) {
+                ) {
                     System.out.format(
                         "Fatal error: '%s' has dependency to non existent definition '%s'",
                         dependency.getKey(),

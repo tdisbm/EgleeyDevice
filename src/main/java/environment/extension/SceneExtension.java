@@ -52,7 +52,7 @@ public class SceneExtension extends Extension
         return "";
     }
 
-    public TreeBuilder buildDefinitionPrototype(TreeBuilder treeBuilder) throws Exception
+    public TreeBuilder buildPrototype(TreeBuilder treeBuilder) throws Exception
     {
         return treeBuilder.setRoot("scenes")
             .addChild(new InstanceNode("class"))

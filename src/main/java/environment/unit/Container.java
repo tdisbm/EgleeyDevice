@@ -29,19 +29,7 @@ public abstract class Container
             return null;
         }
 
-        Object result = this.definitions.get(resource);
-
-        try {
-            if (null == result) {
-                Field field = this.getClass().getDeclaredField(resource);
-                field.setAccessible(true);
-                result = field.get(this);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+        return this.definitions.get(resource);
     }
 
     final public LinkedHashMap get() {
@@ -49,6 +37,10 @@ public abstract class Container
     }
 
     final public Container set(String resource, Object definition) {
+        if (this.__compiled__) {
+            System.out.println("Container is already compiled, ca't set any definition");
+        }
+
         if (resource != null && !resource.isEmpty()) {
             this.definitions.put(resource, definition);
         }
@@ -56,7 +48,7 @@ public abstract class Container
         return this;
     }
 
-    public final boolean has(String resource) {
+    final public boolean has(String resource) {
         return !(this.definitions.get(resource) == null);
     }
 
@@ -116,39 +108,7 @@ public abstract class Container
         this.__compiled__ = true;
     }
 
-    private void linearize() throws IllegalAccessException {
-        if (this.__linearized__) {
-            return;
-        }
-
-        for (Extension extension : this.extensions) {
-            try {
-                extension.prefixing();
-            } catch (Exception ignored) {}
-        }
-
-        LinkedHashMap entities;
-        Map.Entry current;
-
-        for (Field i : this.getClass().getDeclaredFields()) {
-            i.setAccessible(true);
-            entities = (LinkedHashMap) i.get(this);
-
-
-            for (Object o : entities.entrySet()) {
-                current = (Map.Entry) o;
-
-                this.definitions.put(
-                    (String) current.getKey(),
-                    current.getValue()
-                );
-            }
-        }
-
-        this.__linearized__ = true;
-    }
-
-    public boolean hasExtension(String definition) {
+    final public boolean hasExtension(String definition) {
         String prefix;
         String postfix;
 
@@ -187,5 +147,37 @@ public abstract class Container
 
     final public boolean isLinearized() {
         return this.__linearized__;
+    }
+
+    private void linearize() throws IllegalAccessException {
+        if (this.__linearized__) {
+            return;
+        }
+
+        for (Extension extension : this.extensions) {
+            try {
+                extension.prefixing();
+            } catch (Exception ignored) {}
+        }
+
+        LinkedHashMap entities;
+        Map.Entry current;
+
+        for (Field i : this.getClass().getDeclaredFields()) {
+            i.setAccessible(true);
+            entities = (LinkedHashMap) i.get(this);
+
+
+            for (Object o : entities.entrySet()) {
+                current = (Map.Entry) o;
+
+                this.definitions.put(
+                    (String) current.getKey(),
+                    current.getValue()
+                );
+            }
+        }
+
+        this.__linearized__ = true;
     }
 }
