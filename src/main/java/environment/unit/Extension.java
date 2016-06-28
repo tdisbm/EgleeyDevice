@@ -22,11 +22,11 @@ public abstract class Extension
             this.treeBuilder = this.buildPrototype(this.treeBuilder);
 
             if (null == this.treeBuilder) {
-                throw new Exception("Resolver '" + this.getClass() + "' is not configured");
+                throw new Exception("Fatal Error: Extension '" + this.getClass() + "' prototype is not defined");
             }
 
             if (this.treeBuilder.getRootName().equals("")) {
-                throw new Exception("Resolver '" + this.getClass() + "' has empty root");
+                throw new Exception("Fatal Error: Extension '" + this.getClass() + "' has empty root");
             }
 
         } catch (Exception e) {

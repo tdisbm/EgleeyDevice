@@ -8,8 +8,6 @@ import environment.component.tree_builder.nodes.MapNode;
 import environment.component.tree_builder.nodes.StringNode;
 import scene.scenes.SceneInterface;
 
-import java.lang.reflect.Constructor;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SceneExtension extends Extension

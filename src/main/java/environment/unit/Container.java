@@ -111,7 +111,6 @@ public abstract class Container
     {
         LinkedHashMap newValue;
         LinkedHashMap oldValue;
-        Map.Entry current;
 
         for (Field i : container.getClass().getDeclaredFields()) {
             i.setAccessible(true);
@@ -127,14 +126,7 @@ public abstract class Container
                 oldValue = (LinkedHashMap) i.get(this);
             }
 
-            for (Object o : newValue.entrySet()) {
-                current = (Map.Entry) o;
-
-                oldValue.put(
-                    current.getKey(),
-                    current.getValue()
-                );
-            }
+            oldValue.putAll(newValue);
         }
     }
 
