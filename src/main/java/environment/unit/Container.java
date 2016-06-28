@@ -92,7 +92,7 @@ public abstract class Container
 
     @Nullable
     final public Object get(String resource) {
-        if (!this.__compiled__ || !this.__linearized__) {
+        if (!this.__linearized__) {
             return null;
         }
 

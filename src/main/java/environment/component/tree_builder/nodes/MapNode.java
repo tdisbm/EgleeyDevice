@@ -15,8 +15,4 @@ public class MapNode extends Node
     public Object linearize(Object complex, Object linearized) {
         return complex;
     }
-
-    public Object link(Object elements) {
-        return null;
-    }
 }

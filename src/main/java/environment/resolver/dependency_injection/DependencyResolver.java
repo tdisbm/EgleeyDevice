@@ -55,10 +55,13 @@ public class DependencyResolver extends ContainerResolver {
                 dependencyArgumentNames = (ArrayList<String>) dependencies.get(instanceKeys[i]);
 
                 for (Object argument : dependencyArgumentNames) {
-                    arguments.add(null != loaded.get(argument.toString())
-                        ? loaded.get(argument.toString())
-                        : argument
-                    );
+                    if (null != loaded.get(argument.toString())) {
+                        arguments.add(loaded.get(argument.toString()));
+                    } else if (container.hasExtension(argument.toString())) {
+                        arguments.add(container.get(argument.toString()));
+                    } else {
+                        arguments.add(argument);
+                    }
                 }
             }
 

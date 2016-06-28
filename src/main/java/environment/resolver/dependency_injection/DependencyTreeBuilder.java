@@ -102,14 +102,14 @@ class DependencyTreeBuilder
         for (Map.Entry<?, ?> definition : definitions.entrySet()) {
             current = this.findByLevel(definition.getValue(), node.getLevel());
 
-            if (!(current instanceof Set)) {
-                continue;
-            }
+            if (current instanceof Set) {
+                for (Object o : (Set) current) {
+                    if (!(((Map.Entry) o).getKey().equals(node.getName())) &&
+                        !node.supports(((Map.Entry) o).getValue())
+                    ) {
+                        continue;
+                    }
 
-            for (Object o : (Set) current) {
-                if (((Map.Entry) o).getKey().equals(node.getName()) &&
-                    node.supports(((Map.Entry) o).getValue())
-                ) {
                     result.put(
                         (String) definition.getKey(),
                         node.linearize(((Map.Entry) o).getValue(), null)
