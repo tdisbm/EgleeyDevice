@@ -14,8 +14,7 @@ public class SymbiosisTask extends Task
     private DHT22 dht22;
     private LinkedHashMap<String, String> config;
 
-    public SymbiosisTask(DHT22 dht22, LinkedHashMap<String, String> config)
-    {
+    public SymbiosisTask(DHT22 dht22, LinkedHashMap<String, String> config) {
         if (this.validateHostParameters(config)) {
             System.out.println("Invalid config provided to " + this.getClass().getName());
             return;
@@ -28,11 +27,13 @@ public class SymbiosisTask extends Task
 
         IO.Options opts = new IO.Options();
         opts.query = urlBuilder.buildUrl(UrlBuilder.BUILD_QUERY);
-        System.out.println(urlBuilder.buildUrl(UrlBuilder.BUILD_URL));
+
         try {
             this.socket = IO.socket(urlBuilder.getHost(), opts);
             this.socket.connect();
             this.dht22 = dht22;
+
+            System.out.println("Symbiosis connected to " + urlBuilder.getHost());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -47,9 +48,7 @@ public class SymbiosisTask extends Task
         );
     }
 
-    public void run()
-    {
-        System.out.println(dht22.getState().toString());
+    public void run() {
         socket.emit(this.config.get("event"), dht22.getState());
     }
 }
