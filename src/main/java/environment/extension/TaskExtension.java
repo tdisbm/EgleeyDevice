@@ -19,12 +19,12 @@ public class TaskExtension extends Extension
 
     private static final int  OUT_OF_MEMORY_ADDITIONAL_DELAY = 2000000;
 
-    private int succedJobs = 0;
+    private int succeedJobs = 0;
 
     @Override
     public void map(Object definition, Map.Entry prototype) throws Exception {
         if (!(definition instanceof Task)) {
-            throw new Exception("tasks must be instance of Task");
+            throw new Exception("tasks must be instance of " + Task.class.getName());
         }
 
         LinkedHashMap config = (LinkedHashMap) prototype.getValue();
@@ -33,7 +33,7 @@ public class TaskExtension extends Extension
         task.setRate((Integer) config.get("rate"));
 
         if (runSafeThreads(task)) {
-            succedJobs++;
+            succeedJobs++;
         }
     }
 

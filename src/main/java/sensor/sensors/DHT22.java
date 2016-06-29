@@ -1,20 +1,14 @@
 package sensor.sensors;
 
 import com.pi4j.wiringpi.Gpio;
-import org.jetbrains.annotations.Contract;
-import sensor.SensorInterface;
+import sensor.Sensor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class DHT22 implements SensorInterface
+public class DHT22 extends Sensor
 {
     private static final int READ_ATTEMPTS = 15;
     private static final int MAX_TIMINGS = 85;
 
     private int pin;
-
-    private Map<String, Float> currentState = new HashMap<>();
 
     public DHT22(Integer pin) throws Exception {
         if (Gpio.wiringPiSetup() == -1) {
@@ -24,16 +18,10 @@ public class DHT22 implements SensorInterface
         this.pin = pin;
     }
 
-    public Map<String, Float> read() {
+    public void read() {
         for (int i = 0; i < READ_ATTEMPTS; i++) {
             if (this.collectData() == 1) break;
         }
-
-        return this.currentState;
-    }
-
-    public Map<String, Float> getCurrent() {
-        return this.currentState;
     }
 
     private int collectData() {
@@ -87,8 +75,8 @@ public class DHT22 implements SensorInterface
 
             if ((data[2] & 0x80) != 0)  t *= -1;
 
-            this.currentState.put("temperature", t);
-            this.currentState.put("humidity", h);
+            this.write("temperature", t)
+                .write("humidity", h);
 
             return 1;
         }

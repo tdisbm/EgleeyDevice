@@ -15,7 +15,7 @@ public class SceneExtension extends Extension
     @Override
     public void map(Object definition, Map.Entry prototype) throws Exception {
         if (!(definition instanceof SceneInterface)) {
-            throw new Exception("Scene class must implement SceneInterface");
+            throw new Exception("Scene class must implement " + SceneInterface.class.getName());
         }
     }
 

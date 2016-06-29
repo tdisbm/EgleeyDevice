@@ -28,7 +28,7 @@ public class SymbiosisTask extends Task
 
     public void run()
     {
-        System.out.println(dht22.getCurrent().toString());
-        socket.emit("message", dht22.getCurrent());
+        System.out.println(dht22.getState().toString());
+        socket.emit("message", dht22.getState());
     }
 }

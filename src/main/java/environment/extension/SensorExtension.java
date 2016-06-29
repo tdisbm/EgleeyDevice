@@ -3,18 +3,16 @@ package environment.extension;
 import environment.unit.Extension;
 import environment.component.tree_builder.TreeBuilder;
 import environment.component.tree_builder.nodes.*;
-import sensor.SensorInterface;
+import sensor.Sensor;
 
-import java.lang.reflect.Constructor;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SensorExtension extends Extension
 {
     @Override
     public void map(Object definition, Map.Entry prototype) throws Exception {
-        if (!(definition instanceof SensorInterface)) {
-            throw new Exception("Sensor class must implement SensorInterface");
+        if (!(definition instanceof Sensor)) {
+            throw new Exception("Sensor class must abstract " + Sensor.class.getName());
         }
     }
 
