@@ -4,11 +4,11 @@ tasks:
         rate: 5000
         arguments:
             - '@DHT22'
-            - '%parameter1%'
 
     symbiosis:
         class: tasks.SymbiosisTask
         rate: 5000
         arguments:
             - '@DHT22'
+            - '%symbiosis%'
 

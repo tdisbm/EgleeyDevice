@@ -28,9 +28,6 @@ public class SensorExtension extends Extension
         return treeBuilder.setRoot("sensors")
             .addChild(new InstanceNode("class"))
             .addChild(new DependencyNode("arguments"))
-            .next(new MapNode("gpio"))
-                .addChild(new StringNode("pin"))
-            .end()
         .end();
     }
 }

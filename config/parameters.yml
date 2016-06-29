@@ -1,2 +1,8 @@
 parameters:
-    parameter1: value1
+    symbiosis:
+        host: "http://127.0.0.1"
+        port: "8000"
+        type: "device"
+        event: "message"
+
+    DHT22_pin: 7
