@@ -50,7 +50,7 @@ public class UrlBuilder {
             case BUILD_QUERY:
                 break;
             case BUILD_URL:
-                url = this.host;
+                url = this.host + "?";
                 break;
             default:
                 break;
@@ -60,6 +60,6 @@ public class UrlBuilder {
             parameters.add(parameter.getKey() + "=" + parameter.getValue());
         }
 
-        return url + "?" + StringUtils.join(parameters, "&");
+        return url + StringUtils.join(parameters, "&");
     }
 }

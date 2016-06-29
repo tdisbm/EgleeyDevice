@@ -25,6 +25,9 @@ public class DHT22 extends Sensor
     }
 
     private int collectData() {
+        this.write("temperature", Math.random())
+            .write("humidity", Math.random());
+
         return 1;
 //        int laststate = Gpio.HIGH;
 //        int counter;
