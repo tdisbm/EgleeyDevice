@@ -1,11 +1,7 @@
 package environment.component.util.url;
 
-import com.sun.deploy.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class UrlBuilder {
     private Map<String, String> parameters = new HashMap<>();
@@ -60,6 +56,18 @@ public class UrlBuilder {
             parameters.add(parameter.getKey() + "=" + parameter.getValue());
         }
 
-        return url + StringUtils.join(parameters, "&");
+        return url + join(parameters, "&");
+    }
+
+    private static String join(Collection var0, String var1) {
+        StringBuffer var2 = new StringBuffer();
+
+        for(Iterator var3 = var0.iterator(); var3.hasNext(); var2.append((String)var3.next())) {
+            if(var2.length() != 0) {
+                var2.append(var1);
+            }
+        }
+
+        return var2.toString();
     }
 }
