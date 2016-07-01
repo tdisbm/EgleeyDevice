@@ -1,9 +1,12 @@
 package environment.unit;
 
 import environment.resolver.container.ContainerResolver;
+import environment.unit.cache.ContainerCache;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.IntrospectionException;
+import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;

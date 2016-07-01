@@ -4,7 +4,7 @@ import environment.resolver.dependency_injection.DependencyResolver;
 import environment.unit.Container;
 import environment.unit.Extension;
 import environment.extension.ParameterExtension;
-import environment.extension.SceneExtension;
+import environment.extension.scene.SceneExtension;
 import environment.extension.SensorExtension;
 import environment.extension.TaskExtension;
 import environment.resolver.container.ContainerResolver;
@@ -57,6 +57,12 @@ class AppRegister {
     final AppRegister registerResolver(ContainerResolver resolver) {
         this.resolvers.add(resolver);
         this.container.addResolver(resolver);
+
+        return this;
+    }
+
+    final AppRegister registerContainer(Container container) {
+        this.container = container;
 
         return this;
     }

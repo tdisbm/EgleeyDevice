@@ -1,4 +1,4 @@
-package environment.extension;
+package environment.extension.scene;
 
 import environment.unit.Extension;
 import environment.component.tree_builder.TreeBuilder;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import environment.unit.Extension;
 import environment.unit.Container;
 import environment.resolver.container.ContainerResolver;
+import environment.unit.cache.ContainerCache;
 
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -17,10 +18,16 @@ public class Kernel {
     private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     final public void up() {
+        long startTime = System.currentTimeMillis();
+
         this
 
         .loadResources()
         .loadContainer();
+
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.printf("[+] Device is up! \n - Compile time: %d ms", totalTime);
     }
 
     private Kernel loadResources() {

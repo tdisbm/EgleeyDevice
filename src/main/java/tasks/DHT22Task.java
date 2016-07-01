@@ -11,6 +11,7 @@ public class DHT22Task extends Task
     }
 
     public void run() {
+        System.out.println(dht22.getState());
         dht22.read();
     }
 }
