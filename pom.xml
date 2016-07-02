@@ -10,43 +10,57 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jackson.version>2.7.0</jackson.version>
+        <jackson.core.version>2.7.0</jackson.core.version>
+        <jackson.dataformat.version>2.7.4</jackson.dataformat.version>
+
+        <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+
+        <pi4j-core.version>1.0</pi4j-core.version>
+        <pi4j-gpio-extenison.version>1.0</pi4j-gpio-extenison.version>
+
+        <socket.io-client.version>0.7.0</socket.io-client.version>
+        <org.jetbrains.version>RELEASE</org.jetbrains.version>
+        <javafx-maven-plugin.version>8.1.4</javafx-maven-plugin.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
-            <version>1.0</version>
+            <version>${pi4j-core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-gpio-extension</artifactId>
-            <version>1.0</version>
+            <version>${pi4j-gpio-extenison.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.socket</groupId>
             <artifactId>socket.io-client</artifactId>
-            <version>0.7.0</version>
+            <version>${socket.io-client.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.7.4</version>
+            <version>${jackson.dataformat.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson.core.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>
-            <version>RELEASE</version>
+            <version>${org.jetbrains.version}</version>
         </dependency>
     </dependencies>
 
@@ -54,6 +68,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -69,7 +84,7 @@
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.1.4</version>
+                <version>${javafx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>Main</mainClass>
                 </configuration>
@@ -77,6 +92,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
