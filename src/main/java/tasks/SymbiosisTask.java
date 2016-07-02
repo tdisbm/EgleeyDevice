@@ -13,6 +13,7 @@ public class SymbiosisTask extends Task
     private Socket socket;
     private DHT22 dht22;
     private LinkedHashMap<String, String> config;
+    private LinkedHashMap<String, Object> state = new LinkedHashMap<>();
 
     public SymbiosisTask(DHT22 dht22, LinkedHashMap<String, String> config) {
         if (this.validateHostParameters(config)) {
@@ -49,6 +50,8 @@ public class SymbiosisTask extends Task
     }
 
     public void run() {
-        socket.emit(this.config.get("event"), dht22.getState());
+        this.state.put("DHT22", dht22.getState());
+
+        socket.emit(this.config.get("event"), this.state);
     }
 }
