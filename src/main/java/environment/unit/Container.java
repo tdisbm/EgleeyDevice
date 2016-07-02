@@ -174,6 +174,10 @@ public abstract class Container
             i.setAccessible(true);
             entities = (LinkedHashMap) i.get(this);
 
+            if (entities == null) {
+                i.set(this, new LinkedHashMap());
+                continue;
+            }
 
             for (Object o : entities.entrySet()) {
                 current = (Map.Entry) o;

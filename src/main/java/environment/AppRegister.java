@@ -31,12 +31,13 @@ class AppRegister {
     }
 
     private void appDefault() {
+        String normalizedPath = System.getProperty("user.dir") + "/";
         this
 
-        .registerResource(new File("config/scenes.yml"))
-        .registerResource(new File("config/sensors.yml"))
-        .registerResource(new File("config/tasks.yml"))
-        .registerResource(new File("config/parameters.yml"))
+        .registerResource(new File(normalizedPath + "config/scenes.yml"))
+        .registerResource(new File(normalizedPath + "config/sensors.yml"))
+        .registerResource(new File(normalizedPath + "config/tasks.yml"))
+        .registerResource(new File(normalizedPath + "config/parameters.yml"))
 
         .registerResolver(new DependencyResolver())
 
