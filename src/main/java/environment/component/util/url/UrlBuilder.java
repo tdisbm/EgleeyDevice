@@ -29,6 +29,14 @@ public class UrlBuilder {
     }
 
     final public UrlBuilder addParameter(String key, String value) {
+        if (value == null) {
+            return this;
+        }
+
+        if (value.isEmpty()) {
+            return this;
+        }
+
         this.parameters.put(key, value);
 
         return this;

@@ -20,7 +20,7 @@ public class FXApplication extends Application {
         return this;
     }
 
-    final public void main(String[] args) {
+    final public void up(String[] args) {
         launch(args);
     }
 }

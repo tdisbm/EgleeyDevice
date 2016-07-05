@@ -6,7 +6,7 @@
 
     <groupId>EgleeyDevice</groupId>
     <artifactId>EgleeyDevice</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -72,6 +72,7 @@
                 <configuration>
                     <archive>
                         <manifest>
+                            <addClaspath>true</addClaspath>
                             <mainClass>AppRun</mainClass>
                         </manifest>
                     </archive>
@@ -80,15 +81,14 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>${javafx-maven-plugin.version}</version>
-                <configuration>
-                    <mainClass>AppRun</mainClass>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>com.zenjava</groupId>-->
+                <!--<artifactId>javafx-maven-plugin</artifactId>-->
+                <!--<version>${javafx-maven-plugin.version}</version>-->
+                <!--<configuration>-->
+                    <!--<mainClass>AppRun</mainClass>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

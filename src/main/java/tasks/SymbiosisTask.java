@@ -24,7 +24,9 @@ public class SymbiosisTask extends Task
         this.config = config;
 
         UrlBuilder urlBuilder = new UrlBuilder(config.get("host"), config.get("port"));
-        urlBuilder.addParameter("type", config.get("type"));
+        urlBuilder.addParameter("type", config.get("type"))
+            .addParameter("name", config.get("device_name"))
+            .addParameter("email", config.get("email"));
 
         IO.Options opts = new IO.Options();
         opts.query = urlBuilder.buildUrl(UrlBuilder.BUILD_QUERY);
