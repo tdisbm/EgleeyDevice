@@ -1,9 +1,0 @@
-parameters:
-    symbiosis:
-        host: "http://127.0.0.1"
-        port: "8000"
-        type: "device"
-        event: "message"
-        device_name: "Sphinx"
-        email: "test@test.test"
-    DHT22_pin: 7

@@ -1,5 +1,0 @@
-sensors:
-    DHT22:
-        class: sensor.sensors.DHT22
-        arguments:
-          - "%DHT22_pin%"
