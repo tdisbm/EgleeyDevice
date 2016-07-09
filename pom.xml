@@ -23,14 +23,8 @@
         <org.jetbrains.version>RELEASE</org.jetbrains.version>
         <javafx-maven-plugin.version>8.1.4</javafx-maven-plugin.version>
 
-        <kraken.version>1.0.0</kraken.version>
+        <kraken.version>1.0.2</kraken.version>
     </properties>
-
-    <scm>
-        <url>https://github.com/kevinsawicki/github-maven-example</url>
-        <connection>scm:git:git://github.com/tdisbm/Kraken.git</connection>
-        <developerConnection>scm:git:git@github.com:tdisbm/Kraken.git</developerConnection>
-    </scm>
 
     <repositories>
         <repository>

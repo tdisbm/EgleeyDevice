@@ -1,11 +1,11 @@
 package device.task;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import environment.extension.task.Task;
+import kraken.extension.task.Task;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import device.sensors.DHT22;
-import environment.component.util.url.UrlBuilder;
+import kraken.component.util.url.UrlBuilder;
 
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;

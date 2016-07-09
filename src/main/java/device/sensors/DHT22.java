@@ -1,7 +1,7 @@
 package device.sensors;
 
 import com.fasterxml.jackson.databind.node.IntNode;
-import environment.extension.sensor.Sensor;
+import kraken.extension.sensor.Sensor;
 import com.pi4j.wiringpi.Gpio;
 
 public class DHT22 extends Sensor
