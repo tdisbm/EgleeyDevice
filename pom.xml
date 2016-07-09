@@ -64,12 +64,6 @@
             <version>${socket.io-client.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-            <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
-            <!--<version>${jackson.dataformat.version}</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>
@@ -86,7 +80,7 @@
                     <archive>
                         <manifest>
                             <addClaspath>true</addClaspath>
-                            <mainClass>AppRun</mainClass>
+                            <mainClass>Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -94,14 +88,14 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>com.zenjava</groupId>-->
-                <!--<artifactId>javafx-maven-plugin</artifactId>-->
-                <!--<version>${javafx-maven-plugin.version}</version>-->
-                <!--<configuration>-->
-                    <!--<mainClass>AppRun</mainClass>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>Main</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
