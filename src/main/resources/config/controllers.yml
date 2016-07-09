@@ -1,0 +1,10 @@
+controllers:
+    dashboard:
+        class: device.controllers.DashboardController
+        template: src/main/resources/dashboard.fxml
+        options:
+            - main
+
+    help_me:
+        class: device.controllers.HelpMeController
+        template: src/main/resources/help_me.fxml

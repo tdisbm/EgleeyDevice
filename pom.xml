@@ -23,10 +23,29 @@
         <org.jetbrains.version>RELEASE</org.jetbrains.version>
         <javafx-maven-plugin.version>8.1.4</javafx-maven-plugin.version>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kraken.version>1.0.0</kraken.version>
     </properties>
 
+    <scm>
+        <url>https://github.com/kevinsawicki/github-maven-example</url>
+        <connection>scm:git:git://github.com/tdisbm/Kraken.git</connection>
+        <developerConnection>scm:git:git@github.com:tdisbm/Kraken.git</developerConnection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.github.tdisbm</groupId>
+            <artifactId>Kraken</artifactId>
+            <version>${kraken.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
@@ -45,17 +64,11 @@
             <version>${socket.io-client.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>${jackson.dataformat.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.core.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
+            <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
+            <!--<version>${jackson.dataformat.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.jetbrains</groupId>

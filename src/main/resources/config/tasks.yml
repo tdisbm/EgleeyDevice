@@ -1,0 +1,14 @@
+tasks:
+    DHT22:
+        class: device.task.DHT22Task
+        rate: 5000
+        arguments:
+            - sensors.DHT22
+
+    symbiosis:
+        class: device.task.SymbiosisTask
+        rate: 5000
+        arguments:
+            - sensors.DHT22
+            - parameters.symbiosis
+

@@ -1,0 +1,5 @@
+sensors:
+    DHT22:
+        class: device.sensors.DHT22
+        arguments:
+          - parameters.DHT22_pin
