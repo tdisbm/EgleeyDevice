@@ -23,7 +23,7 @@
         <org.jetbrains.version>RELEASE</org.jetbrains.version>
         <javafx-maven-plugin.version>8.1.4</javafx-maven-plugin.version>
 
-        <kraken.version>1.0.2</kraken.version>
+        <kraken.version>1.0.12</kraken.version>
     </properties>
 
     <repositories>
