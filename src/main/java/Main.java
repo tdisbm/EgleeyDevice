@@ -1,3 +1,5 @@
+import kraken.Kraken;
+
 import java.io.File;
 
 public class Main {
@@ -6,9 +8,9 @@ public class Main {
 
         kraken
             .sink(new File("src/main/resources/config/parameters.yml"))
-            .sink(new File("src/main/resources/config/controllers.yml"))
             .sink(new File("src/main/resources/config/sensors.yml"))
             .sink(new File("src/main/resources/config/tasks.yml"))
+            .sink(new File("src/main/resources/config/services.yml"))
         .dive();
     }
 }

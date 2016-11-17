@@ -23,7 +23,7 @@
         <org.jetbrains.version>RELEASE</org.jetbrains.version>
         <javafx-maven-plugin.version>8.1.4</javafx-maven-plugin.version>
 
-        <kraken.version>1.0.12</kraken.version>
+        <kraken.version>d95752fc5e</kraken.version>
     </properties>
 
     <repositories>
@@ -38,30 +38,6 @@
             <groupId>com.github.tdisbm</groupId>
             <artifactId>Kraken</artifactId>
             <version>${kraken.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-core</artifactId>
-            <version>${pi4j-core.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-gpio-extension</artifactId>
-            <version>${pi4j-gpio-extenison.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.socket</groupId>
-            <artifactId>socket.io-client</artifactId>
-            <version>${socket.io-client.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations-java5</artifactId>
-            <version>${org.jetbrains.version}</version>
         </dependency>
     </dependencies>
 
@@ -80,14 +56,6 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>${javafx-maven-plugin.version}</version>
-                <configuration>
-                    <mainClass>Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
