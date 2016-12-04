@@ -1,6 +1,7 @@
 package device.sensors;
 
 import com.fasterxml.jackson.databind.node.IntNode;
+import device.entity.Device;
 import kraken.extension.sensor.Sensor;
 import com.pi4j.wiringpi.Gpio;
 
@@ -11,12 +12,19 @@ public class DHT22 extends Sensor
 
     private int pin;
 
+    private Device device = new Device();
+
+    private boolean testMode = false;
+
     public DHT22(IntNode pin) throws Exception {
-//        if (Gpio.wiringPiSetup() == -1) {
-//            throw new Exception("Can't setup wiring pi module");
-//        }
+        this.testMode = true;
+
+        if (!this.testMode && Gpio.wiringPiSetup() == -1) {
+            throw new Exception("Can't setup wiring pi module");
+        }
 
         this.pin = pin.intValue();
+        this.device.setName(this.getName());
     }
 
     public void read() {
@@ -25,64 +33,80 @@ public class DHT22 extends Sensor
         }
     }
 
+    public String getName() {
+        return "DHT22";
+    }
+
+    public Device getDevice() {
+        return this.device;
+    }
+
     private int collectData() {
-        return 1;
-//        int laststate = Gpio.HIGH;
-//        int counter;
-//        int j = 0, i;
-//        int data[] = new int[5];
-//
-//        Gpio.pinMode(this.pin, Gpio.OUTPUT);
-//        Gpio.digitalWrite(this.pin, Gpio.HIGH); Gpio.delay(10);
-//        Gpio.digitalWrite(this.pin, Gpio.LOW);  Gpio.delay(18);
-//        Gpio.digitalWrite(this.pin, Gpio.HIGH); Gpio.delayMicroseconds(40);
-//        Gpio.pinMode(this.pin, Gpio.INPUT);
-//
-//        for (i = 0; i < MAX_TIMINGS; i++) {
-//            counter = 0;
-//            while (Gpio.digitalRead(this.pin) == laststate) {
-//                counter++;
-//                Gpio.delayMicroseconds(1);
-//                if (counter == 255) {
-//                    break;
-//                }
-//            }
-//
-//            laststate = Gpio.digitalRead(this.pin);
-//
-//            if (counter == 255) break;
-//
-//            // ignore first 3 transitions
-//            if ((i >= 4) && (i%2 == 0)) {
-//                // shove each bit into the storage bytes
-//                data[j/8] <<= 1;
-//
-//                if (counter > 16) {
-//                    data[j/8] |= 1;
-//                }
-//
-//                j++;
-//            }
-//        }
-//
-//        // check we read 40 bits (8bit x 5 ) + verify checksum in the last byte
-//        if ((j >= 40) && (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) ) {
-//            float t, h;
-//
-//            h = (float)data[0] * 256 + (float)data[1];
-//            h /= 10;
-//
-//            t = (float)(data[2] & 0x7F)* 256 + (float)data[3];
-//            t /= 10.0;
-//
-//            if ((data[2] & 0x80) != 0)  t *= -1;
-//
-//            this.write("temperature", t)
-//                .write("humidity", h);
-//
-//            return 1;
-//        }
-//
-//        return 0;
+        if (this.testMode) {
+            this.write("temperature", "Jenea")
+                    .write("humidity", "Loh");
+            this.device.setData(this.getState());
+            return 1;
+        }
+
+        int laststate = Gpio.HIGH;
+        int counter;
+        int j = 0, i;
+        int data[] = new int[5];
+
+        Gpio.pinMode(this.pin, Gpio.OUTPUT);
+        Gpio.digitalWrite(this.pin, Gpio.HIGH); Gpio.delay(10);
+        Gpio.digitalWrite(this.pin, Gpio.LOW);  Gpio.delay(18);
+        Gpio.digitalWrite(this.pin, Gpio.HIGH); Gpio.delayMicroseconds(40);
+        Gpio.pinMode(this.pin, Gpio.INPUT);
+
+        for (i = 0; i < MAX_TIMINGS; i++) {
+            counter = 0;
+            while (Gpio.digitalRead(this.pin) == laststate) {
+                counter++;
+                Gpio.delayMicroseconds(1);
+                if (counter == 255) {
+                    break;
+                }
+            }
+
+            laststate = Gpio.digitalRead(this.pin);
+
+            if (counter == 255) break;
+
+            // ignore first 3 transitions
+            if ((i >= 4) && (i%2 == 0)) {
+                // shove each bit into the storage bytes
+                data[j/8] <<= 1;
+
+                if (counter > 16) {
+                    data[j/8] |= 1;
+                }
+
+                j++;
+            }
+        }
+
+        // check we read 40 bits (8bit x 5 ) + verify checksum in the last byte
+        if ((j >= 40) && (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) ) {
+            float t, h;
+
+            h = (float)data[0] * 256 + (float)data[1];
+            h /= 10;
+
+            t = (float)(data[2] & 0x7F)* 256 + (float)data[3];
+            t /= 10.0;
+
+            if ((data[2] & 0x80) != 0)  t *= -1;
+
+            this.write("temperature", t)
+                .write("humidity", h);
+
+            this.device.setData(this.getState());
+
+            return 1;
+        }
+
+        return 0;
     }
 }
